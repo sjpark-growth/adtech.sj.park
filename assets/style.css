@@ -999,9 +999,9 @@ body { overflow-x: clip; }
 
 /* 결정적 수치 — 오른쪽 수치 표와 세로 가운데 정렬 + 강조 */
 .summary .shell { align-items: center; }
-.summary .sum-l > #sum-h { font-size: clamp(24px, 2.2vw, 32px); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 14px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; position: relative; padding-left: 16px; }
-.summary .sum-l > #sum-h::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 5px; border-radius: 3px; background: linear-gradient(var(--accent), color-mix(in srgb, var(--accent) 35%, transparent)); }
-.summary .sum-l > #sum-h span { font-size: 12px; order: -1; color: var(--accent-ink); font-weight: 600; letter-spacing: .06em; }
+.summary .sum-top > #sum-h { font-size: clamp(24px, 2.2vw, 32px); font-weight: 800; letter-spacing: -0.04em; margin-bottom: 14px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; position: relative; padding-left: 16px; }
+.summary .sum-top > #sum-h::before { content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 5px; border-radius: 3px; background: linear-gradient(var(--accent), color-mix(in srgb, var(--accent) 35%, transparent)); }
+.summary .sum-top > #sum-h span { font-size: 12px; order: -1; color: var(--accent-ink); font-weight: 600; letter-spacing: .06em; }
 .summary .lede { font-size: 17px; }
 .hk { border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--rule)); box-shadow: var(--shadow); position: relative; }
 .hk::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 25%, transparent)); z-index: 1; }
@@ -1009,7 +1009,7 @@ body { overflow-x: clip; }
 .hk .kpi .k { font-size: 13.5px; color: var(--ink); }
 .hk .kpi .v { font-size: clamp(34px, 3vw, 46px); }
 .hk .kpi .d { font-size: 13.5px; }
-@media (max-width: 600px) { .hk .kpi .v { font-size: 30px; } .summary .sum-l > #sum-h { font-size: 24px; } }
+@media (max-width: 600px) { .hk .kpi .v { font-size: 30px; } .summary .sum-top > #sum-h { font-size: 24px; } }
 
 /* 대시보드 축소판 — 오른쪽 설명과 높이를 맞춰 아래로 늘린다 */
 @media (min-width: 1101px) {
@@ -1085,25 +1085,13 @@ body { overflow-x: clip; }
 /* ---------- 첫 화면을 한 화면에 (넓은 화면 · 창 높이에 맞춤) ---------- */
 @media (min-width: 1101px) {
   .hero { padding-block: clamp(10px, 1.6vh, 20px) clamp(12px, 2vh, 24px); }
-  .mboard-wrap { gap: clamp(6px, 1vh, 12px); }
-  .mboard { gap: clamp(8px, 1.2vh, 12px); }
-  .mp { padding: clamp(10px, 1.5vh, 15px) 16px clamp(8px, 1.2vh, 12px); }
-  .mp-big { margin-top: clamp(2px, .5vh, 6px); }
-  .mp-big .to { font-size: clamp(30px, 4.6vh, 46px); }
-  .mp-sub { min-height: 0; margin: 3px 0 4px; }
   .portrait { width: clamp(110px, 17vh, 170px); }
   .hero h1 { font-size: clamp(44px, 8vh, 82px); }
   .thesis { font-size: clamp(24px, 3.9vh, 38px); margin-top: clamp(14px, 2.6vh, 28px); }
   .hero .kicker { margin-top: clamp(14px, 2.4vh, 26px); }
   .hero .contact { margin-top: clamp(14px, 2.4vh, 26px); }
 }
-@media (min-width: 1101px) and (max-height: 900px) {
-  .mp-span { display: none; }
-  .mp-key { margin-top: 2px; }
-}
 @media (min-width: 1101px) and (max-height: 760px) {
-  .mp-key { display: none; }
-  .mp-sub { font-size: 12px; }
   .hero .contact .chip { min-height: 36px; font-size: 14px; padding: 6px 12px; }
 }
 
@@ -1111,11 +1099,6 @@ body { overflow-x: clip; }
 @media (min-width: 1101px) {
   .hero .shell { align-items: start; }
   .hero-l { padding-top: clamp(6px, 2.4vh, 30px); }
-  .mp h3 { font-size: clamp(15px, 2.1vh, 19px); }
-  .mp-group { font-size: 10.5px; }
-  .mp-big .to { font-size: clamp(28px, 4.2vh, 44px); }
-  .mp-big .from { font-size: clamp(16px, 2.3vh, 22px); }
-  .mb-h h2 { font-size: clamp(18px, 2.6vh, 24px); }
   .portrait { width: clamp(104px, 16vh, 164px); }
   .hero h1 { font-size: clamp(42px, 7.4vh, 80px); }
 }
@@ -1324,34 +1307,15 @@ body { overflow-x: clip; }
 @media print { .herosum { margin-top: 8pt; row-gap: 3pt; } .herosum span { font-size: 9.5pt; color: #333; } .herosum .hs-k { font-size: 8.5pt; } }
 
 /* ---------- 낮은 노트북 화면(브라우저 UI 를 뺀 높이 ≤ 700px) 첫 화면 한 장 (2026-09-19) ----------
-   4칸 보드가 첫 화면 높이를 정한다. 카드 안쪽 여백 · 큰 숫자 · 간격을 한 단계 더 줄여 헤더 + 띠 + 첫 화면이 들어오게 한다. */
+   (2026-09-26) 첫 화면 높이는 왼쪽 자기소개가 정한다 — 오른쪽 리포트 미리보기는 남는 높이만큼만 차지한다. 간격 · 글자를 한 단계 줄여 헤더 + 띠 + 첫 화면이 들어오게 한다. */
 @media (min-width: 1101px) and (max-height: 700px) {
   .hero { padding-block: 6px 8px; }
-  .mboard-wrap { gap: 5px; }
-  .mboard { gap: 7px; }
-  .mp { padding: 7px 13px 6px; }
-  .mp-big { margin-top: 1px; }
-  .mp-big .to { font-size: clamp(23px, 3.6vh, 34px); }
-  .mp-big .from { font-size: clamp(14px, 2vh, 18px); }
-  .mp-sub { margin: 2px 0 2px; font-size: 11.5px; line-height: 1.35; }
-  .mb-h h2 { font-size: clamp(16px, 2.4vh, 20px); }
   .hero-l { padding-top: 2px; }
   .hero .kicker, .hero .contact, .thesis { margin-top: clamp(8px, 1.6vh, 16px); }
   .herosum { margin-top: 8px; row-gap: 3px; }
   .herosum span { font-size: 12.4px; line-height: 1.35; }
   .herosum .hs-k { font-size: 11px; }
 }
-/* 아주 낮은 화면(≤ 620px) — 한 단계 더 */
-@media (min-width: 1101px) and (max-height: 620px) {
-  .mp { padding: 6px 12px 5px; }
-  .mp h3 { font-size: clamp(14px, 2vh, 17px); }
-  .mp-tag { font-size: 11.5px; }
-  .mp-big .to { font-size: clamp(21px, 3.4vh, 30px); }
-  .mp-sub { margin: 1px 0; font-size: 11px; }
-  .mboard { gap: 6px; }
-}
-
-
 
 /* ===== (2026-09-20) 움직임 예산 — 안 보이는 동안은 멈춘다 =====
    .anim-idle  : 화면 밖으로 나간 요소 (app.js 의 IntersectionObserver 가 붙인다)
@@ -1676,13 +1640,9 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
   .foot .shell { gap: 4pt 16pt !important; }
 }
 
-/* (2026-09-26) 첫 화면 오른쪽 「광고 성과」 보드 — 위에만 붙어 아래가 비던 것을, 왼쪽(사진 ~ 요약 다섯 줄) 높이만큼
-   카드를 키워 채운다. 카드 안 여유는 제목 · 숫자 · 설명 · 차트 사이에 고르게 나눈다(차트는 비율 고정이라 늘리지 않는다) */
+/* (2026-09-26) 첫 화면 좌우 칸 높이 맞춤 — 오른쪽(리포트 · 광고 성과)이 왼쪽(사진 ~ 요약 다섯 줄) 높이만큼 늘어난다 */
 @media screen and (min-width: 1101px) {
   .hero .shell { align-items: stretch; }
-  .hero .mboard-wrap { align-self: stretch; }
-  .hero .mboard { flex: 1 1 auto; grid-auto-rows: 1fr; }
-  .hero .mboard .mp { justify-content: space-between; }
 }
 
 /* ===== (2026-09-26) 내용 보강 — 잘 맞는 브랜드 · 주간 리포트 · 첫 4주 ===== */
@@ -1711,11 +1671,11 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 /* ===== (2026-09-26) 모바일 최적화 ===== */
 .mb-dots { display: none; }
 @media screen and (max-width: 600px) {
-  /* 첫 화면 성과 네 칸 — 세로로 쌓이면 화면 한 장 반을 차지해, 옆으로 넘겨 보게 한다 */
-  .hero .mboard { display: flex; gap: 10px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
+  /* 성과 차트 네 칸 — 세로로 쌓이면 화면 한 장 반을 차지해, 옆으로 넘겨 보게 한다 */
+  .summary .mboard { display: flex; gap: 10px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
                   margin-inline: calc(-1 * var(--gut)); padding: 2px var(--gut) 6px; scroll-padding-inline: var(--gut); scrollbar-width: none; }
-  .hero .mboard::-webkit-scrollbar { display: none; }
-  .hero .mboard > .mp { flex: 0 0 86%; scroll-snap-align: start; }
+  .summary .mboard::-webkit-scrollbar { display: none; }
+  .summary .mboard > .mp { flex: 0 0 86%; scroll-snap-align: start; }
   .mb-dots { display: flex; justify-content: center; gap: 6px; margin-top: 2px; }
   .mb-dots i { width: 6px; height: 6px; border-radius: 99px; background: var(--rule-2); transition: width .2s, background-color .2s; }
   .mb-dots i.on { width: 18px; background: var(--accent); }
@@ -1771,7 +1731,7 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 .proc h3, .onboard h4            { font-size: clamp(20px, 1.75vw, 22.5px); }
 .sub-h                           { font-size: clamp(22px, 2.1vw, 27px); }
 .svcfit h3                       { font-size: clamp(19px, 1.65vw, 21px); }
-.summary .sum-l > #sum-h         { font-size: clamp(25px, 2.4vw, 34px); }
+.summary .sum-top > #sum-h         { font-size: clamp(25px, 2.4vw, 34px); }
 .summary .more .hk-h             { font-size: 17px; }
 .hk .kpi .k                      { font-size: 14.5px; }
 .chart-title h3                  { font-size: 19px; }
@@ -1786,7 +1746,7 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 .askbox b                        { font-size: 16px; }
 .factgrid h3                     { font-size: 14px; }
 @media (min-width: 1101px) { .mb-h h2 { font-size: clamp(21px, 1.9vw, 26px); } }
-@media (max-width: 600px) { .summary .sum-l > #sum-h { font-size: 26px; } .job-side .co { font-size: 21px; } }
+@media (max-width: 600px) { .summary .sum-top > #sum-h { font-size: 26px; } .job-side .co { font-size: 21px; } }
 @media print { .belief h3, .proj h3, .gcard h3, .svc h3, .plan h3 { font-size: 15pt; } .proc h3, .onboard h4, .pillar h3, .svcfit h3 { font-size: 13.5pt; } .sub-h { font-size: 16pt; } }
 
 /* (2026-09-26) 서비스 카드 매체 이름을 크게 — 광고주가 맡길 매체를 여기서 고르므로 카드에서 가장 먼저 보이게(본인 요청 「크기 많이」) */
@@ -1851,3 +1811,135 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 .svc-tier b     { font-size: clamp(13.5px, 1.17vw, 15px); }
 @media (max-width: 600px) { .svc-mini .mk b { font-size: 18px; } .svc-tier b { font-size: 14px; } }
 @media print { .svc-mini .mk b { font-size: 12pt; } .svc-tier b { font-size: 10.5pt; } }
+
+/* =========================================================================
+   (2026-09-26) 첫 화면 3분할 — 자기소개 | 리포트(위) / 광고 성과(아래)
+   · 넓은 화면(≥1101px): 왼쪽 자기소개, 오른쪽 위 대시보드 미리보기(남는 높이를 다 쓴다), 오른쪽 아래 매체 네 칸
+   · 태블릿 · 휴대폰 · 인쇄: 한 줄로 쌓되 이름 · 한 줄 소개 → 성과 네 칸 → 연락처 → 대시보드 → 요약 순서로
+     (휴대폰 첫 화면에 성과 네 칸과 메일 · 전화 버튼이 함께 들어온다)
+   ========================================================================= */
+.hero-r { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.hr-h { display: flex; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; padding: 0 2px; }
+.hr-h h2 { margin: 0; position: relative; padding-left: 13px; font-size: 20px; font-weight: 800; line-height: 1.2; letter-spacing: -0.04em; }
+.hr-h h2::before { content: ""; position: absolute; left: 0; top: 3px; bottom: 3px; width: 4px; border-radius: 2px; background: var(--accent); }
+.hr-h > span { font-size: 12.5px; color: var(--ink-3); letter-spacing: -0.01em; }
+.hr-more { margin-left: auto; font-size: 12.5px; font-weight: 700; color: var(--accent-ink); text-decoration: none; white-space: nowrap; }
+.hr-more:hover { text-decoration: underline; }
+
+/* 리포트 — 대시보드 미리보기 (캡처 → 넓은 화면에서는 실제 데모 둘러보기) */
+.hdash { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.hdash-frame { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 14px; border: 1px solid var(--ring); box-shadow: var(--shadow); background: #f6f8fb; }
+.hd-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: left top; display: block; }
+.hd-live { position: absolute; left: 0; top: 0; width: 1440px; height: 810px; border: 0; transform-origin: 0 0; pointer-events: none; background: #f6f8fb; opacity: 0; transition: opacity .6s ease; }
+.hdash-frame.is-live .hd-live { opacity: 1; }
+.hdash-frame .dash-shield { z-index: 2; }
+.hdash-frame .dash-badge { z-index: 3; }
+.hd-cap { position: absolute; z-index: 3; left: 10px; bottom: 10px; max-width: calc(100% - 20px); margin: 0; padding: 6px 11px; border-radius: 8px;
+  background: rgba(11, 19, 32, .84); color: #e8edf5; font-size: 12.5px; font-weight: 600; line-height: 1.4; pointer-events: none; opacity: 0; transition: opacity .3s; }
+.hd-cap::before { content: "\258D"; color: #8b9bff; margin-right: 3px; }
+.hdash-frame.is-live .hd-cap:not(:empty) { opacity: 1; }
+@media (hover: none) { .hdash-frame .dash-shield span { opacity: 1; transform: none; } }
+
+/* 광고 성과 — 매체 네 칸 */
+.wins { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.win { min-width: 0; }
+.win > a { position: relative; display: flex; flex-direction: column; gap: 2px; height: 100%; box-sizing: border-box; padding: 13px 14px 11px; overflow: hidden;
+  border-radius: 14px; background: var(--surface); border: 1px solid var(--ring); box-shadow: var(--shadow); color: inherit; text-decoration: none;
+  transition: transform .25s cubic-bezier(.2,.8,.2,1), border-color .2s, box-shadow .25s; }
+.win > a::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--c); }
+.win > a:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--c) 55%, var(--ring)); box-shadow: 0 10px 28px rgba(12,26,43,.14); }
+.w-k { display: flex; align-items: center; min-width: 0; font-size: 13px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.w-k .emo { font-size: 13px; margin-right: 5px; }
+.w-v { margin-top: 3px; font-family: var(--f-num); font-stretch: 85%; font-size: clamp(26px, min(4vh, 2.35vw), 38px); font-weight: 600; line-height: 1.02; letter-spacing: -0.02em; white-space: nowrap; color: var(--accent-ink); }
+.w-v small { margin-left: 2px; font-size: .5em; font-weight: 500; color: var(--ink-2); }
+.w-v .shine { background-image: linear-gradient(105deg, var(--accent-ink) 0%, var(--accent-ink) 42%, var(--shine) 50%, var(--accent-ink) 58%, var(--accent-ink) 100%); }
+.w-d { font-size: 12.5px; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.w-d b { color: var(--ink); font-weight: 700; }
+.w-bars { display: grid; gap: 3px; margin-top: 6px; }
+.w-bars i { display: block; height: 5px; width: var(--w); border-radius: 3px; background: var(--before); opacity: .75; transform-origin: left; animation: wgrow .9s .5s cubic-bezier(.2,.8,.2,1) both; }
+.w-bars i + i { background: var(--c); opacity: 1; animation-delay: .7s; }
+@keyframes wgrow { from { transform: scaleX(0); } }
+.w-s { margin-top: auto; padding-top: 5px; font-size: 11px; line-height: 1.35; color: var(--ink-3); }
+@media (prefers-reduced-motion: reduce) { .w-v .shine { color: var(--accent-ink) !important; } .win > a:hover { transform: none; } }
+@media (hover: none) { .win > a:hover { transform: none; } }
+
+/* 넓은 화면 — 3분할 */
+@media screen and (min-width: 1101px) {
+  .hero .shell { grid-template-columns: minmax(0, .9fr) minmax(0, 1.42fr); gap: clamp(24px, 2.6vw, 40px); }
+  .hero-r { gap: clamp(10px, 1.6vh, 16px); }
+  .hdash { flex: 1 1 auto; min-height: 0; }
+  .hdash-frame { flex: 1 1 auto; aspect-ratio: auto; min-height: 200px; }
+  .hr-h h2 { font-size: clamp(17px, 2.4vh, 21px); }
+}
+@media screen and (min-width: 1101px) and (max-height: 760px) {
+  .win > a { padding: 10px 12px 9px; }
+  .w-bars { margin-top: 4px; }
+  .w-s { padding-top: 3px; }
+}
+
+/* 태블릿 · 휴대폰 · 인쇄 — 한 줄로 쌓고 순서를 바꾼다 */
+@media (max-width: 1100px) {
+  .hero .shell { display: flex; flex-direction: column; align-items: stretch; gap: 0; }   /* 격자용 gap · 세로 가운데 정렬이 쌓인 칸 사이에 끼지 않게 */
+  .hero-l, .hero-r { display: contents; }
+  .hero .idrow { order: 1; }
+  .hero .kicker { order: 2; }
+  .hero .thesis { order: 3; }
+  .hwins { order: 4; margin-top: 22px; }
+  .hero .cta { order: 5; }
+  .hdash { order: 6; margin-top: 22px; }
+  .hero .herosum { order: 7; }
+  .hwins .hr-h, .hdash .hr-h { margin-bottom: 8px; }
+}
+@media (max-width: 760px) {
+  .wins { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+}
+@media (max-width: 600px) {
+  .hero .kicker { margin-top: 14px; }
+  .hwins { margin-top: 14px; }
+  .hwins .hr-h { margin-bottom: 6px; }
+  .hwins .hr-h > span { display: none; }
+  .hero .cta { margin-top: 14px; }
+  .win > a { padding: 10px 12px 9px; }
+  .w-k { font-size: 12.5px; }
+  .w-v { font-size: 27px; }
+  .w-d { font-size: 12px; }
+  .hdash-frame { aspect-ratio: 16 / 10; }
+}
+/* 아주 작은 휴대폰 — 기준 기간 줄은 아래 차트 카드에 있으니 빼고, 네 칸을 첫 화면에 넣는다 */
+@media (max-width: 380px) { .w-s { display: none; } }
+
+/* 「광고 성과 — 운영 전과 비교」 — 제목 · 문단 한 줄, 아래 차트 네 칸, 그 밖의 개선 */
+.summary .shell { display: block; }
+.sum-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 10px clamp(20px, 3vw, 44px); align-items: center; margin-bottom: clamp(16px, 2vw, 24px); }
+.sum-top > #sum-h { margin-bottom: 0 !important; }
+.summary .mboard { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.summary .mp { scroll-margin-top: calc(var(--mast-h, 64px) + 12px); }
+.summary .mp-chart { margin-top: auto; }
+.summary .more { margin-top: 18px; }
+.summary .more .hk-h { font-size: 15px; }
+@media (max-width: 1100px) { .sum-top { grid-template-columns: minmax(0, 1fr); } .summary .mboard { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .summary .mboard { grid-template-columns: minmax(0, 1fr); } }
+/* 첫 화면 네 칸에서 눌러 내려왔을 때 — 해당 카드를 잠깐 강조 */
+.summary .mp:target { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent), var(--shadow); }
+
+/* 기간 비교 표 — 좁은 칸에서 숫자가 「1,42 / 6」처럼 두 줄로 쪼개지던 것 */
+.cmp td .num, .cmp td { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cmp th:first-child, .cmp td:first-child { white-space: normal; }
+
+/* 인쇄 · PDF — 첫 화면은 캡처 이미지로(실제 데모는 종이에 찍히지 않는다), 화면 전용 표시는 뺀다 */
+@media print {
+  .hd-live, .hd-cap, .hr-more { display: none !important; }
+  .hdash-frame { aspect-ratio: 2.8 / 1; break-inside: avoid; box-shadow: none; }
+  .hero .cta { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: none; }   /* 메일 · 전화를 한 줄에 — 첫 장에 대시보드 캡처까지 들어가게 */
+  .hero .herosum { order: 5; }   /* 종이에서는 자기소개 요약을 연락처 바로 아래에 붙여 첫 장에 함께 — 대시보드 캡처는 그 아래 */
+  .win > a { box-shadow: none; break-inside: avoid; }
+  .w-v .shine { color: var(--accent-ink) !important; }
+  .wins { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 6pt !important; }
+  .summary .mboard { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+/* 첫 화면 왼쪽 칸이 좁아져(3분할) 역할 · 업력 한 줄이 두 줄로 꺾이던 것 — 넓은 화면에서만 자간 · 간격을 줄인다 */
+@media screen and (min-width: 1101px) {
+  .hero .eyebrow { gap: 4px 10px; letter-spacing: .04em; font-size: 12px; }
+}
+/* 대시보드 미리보기 — 「임의 값」 표시는 오른쪽 위, 둘러보기 설명은 왼쪽 아래 */
+.hdash-frame .dash-badge { top: 10px; right: 10px; left: auto; bottom: auto; }

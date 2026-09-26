@@ -169,9 +169,10 @@
     if (A.kicker) R.profile.kicker = A.kicker;
     if (A.thesis) R.profile.thesis = A.thesis;
     if (A.lede) R.profile.lede = A.lede;
-    if (A.first && Array.isArray(R.profile.highlights)) {
-      const i = R.profile.highlights.findIndex(h => h[0] === A.first);
-      if (i > 0) R.profile.highlights.unshift(R.profile.highlights.splice(i, 1)[0]);
+    // 첫 화면 「광고 성과」 네 칸과 아래 차트 네 칸 — 제안받는 매체를 맨 앞으로
+    if (A.first && Array.isArray(R.board)) {
+      const i = R.board.findIndex(b => (b.group || '').startsWith(A.first));
+      if (i > 0) R.board.unshift(R.board.splice(i, 1)[0]);
     }
   }
   /* ------------------------------------------------------------ hero */
@@ -198,33 +199,87 @@
         <span class="cta-l"><small>${telHint}</small><b>${P.phone}</b></span>
         <span class="cta-act">${ICON.phone}<em>${TOUCH ? '전화' : '복사'}</em></span>
       </a>`;
-    const noteHTML = `<p class="cta-note">${ICON.pin}<span>${P.location}</span><span aria-hidden="true">·</span><a href="mailto:${P.email}">메일 앱으로 바로 쓰기 →</a></p>`;
-    $('#heroContact').innerHTML = ctaHTML + noteHTML;
+    // 첫 화면만 「보통 하루 안에 답변」을 붙인다 — 문의 섹션은 옆 안내 칸에 같은 말이 이미 있다
+    const note = reply => `<p class="cta-note">${ICON.pin}<span>${P.location}</span><span aria-hidden="true">·</span>${reply ? '<span>보통 하루 안에 답변</span><span aria-hidden="true">·</span>' : ''}<a href="mailto:${P.email}">메일 앱으로 쓰기 →</a></p>`;
+    $('#heroContact').innerHTML = ctaHTML + note(true);
     $('#contact2').innerHTML = ctaHTML;   // 문의 섹션은 세 칸(메일 · 전화 · 안내)을 같은 크기로 — 위치 줄은 아래 따로
-    const cn = $('#contactNote'); if (cn) cn.outerHTML = noteHTML.replace('class="cta-note"', 'class="cta-note" id="contactNote"');
+    const cn = $('#contactNote'); if (cn) cn.outerHTML = note(false).replace('class="cta-note"', 'class="cta-note" id="contactNote"');
     const ask = $('#askBox');
     if (ask && P.ask && P.ask.length) ask.innerHTML = `<b>이것만 적어 보내 주시면 첫 답이 빨라집니다</b><ol>${P.ask.map(x => `<li>${x}</li>`).join('')}</ol><span>메일 · 전화 모두 편하신 쪽으로 — 보통 하루 안에 답드립니다.</span>`;
     $('#heroSum').innerHTML = (P.highlights || []).map(h => `<li><b class="hs-k">${h[0]}</b><span>${h[1]}</span></li>`).join('');
     $('#contact-lede').innerHTML = `${P.role} · ${P.career}. <b>메일이 가장 빠릅니다</b> — 아래 버튼을 누르면 주소가 복사됩니다.`;
-    // 요약 띠
+    // 「광고 성과 — 운영 전과 비교」 구간 (아래 차트 네 칸은 renderBoard)
     $('#h-lede').innerHTML = P.lede;
-    $('#h-now').innerHTML = P.now.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
-    $('#kpis').innerHTML = R.kpis.map(k => `
-      <li class="kpi">
-        <span class="k">${k.e ? `<span class="emo" aria-hidden="true">${k.e}</span>` : ''}${k.k}</span>
-        <span class="v"><span class="shine" data-roll-from="${k.from}" data-roll-to="${k.v}">${k.v}</span><small>${k.u}</small></span>
-        <span class="d">${k.d}</span>
-        ${R.config.showAbsolute && k.abs ? `<span class="abs">${k.abs}</span>` : ''}
-        <span class="s">${k.s}</span>
-      </li>`).join('');
     $('#moreWins').innerHTML = (R.moreWins || []).map(w => `<li>${w}</li>`).join('');
   }
 
-  /* ------------------------------------------------------------ 4칸 모션 보드 */
+  /* ------------------------------------------------------------ 첫 화면 오른쪽 아래 — 광고 성과 네 칸
+     (2026-09-26) 매체마다 큰 숫자 하나 + 전 → 후 + 막대 두 줄(길이 = 값 비율). 누르면 아래 차트 카드로 */
+  function renderWins() {
+    const host = $('#heroWins'); if (!host) return;
+    host.innerHTML = R.board.filter(b => b.win).map(b => {
+      const w = b.win, pa = Math.max(4, Math.round(w.a / Math.max(w.a, w.b) * 100));
+      return `<li class="win" style="--c:${b.color || 'var(--accent)'}"><a href="#mb-${b.id}">
+        <span class="w-k"><span class="emo" aria-hidden="true">${w.e || ''}</span>${w.k}</span>
+        <span class="w-v"><span class="shine" data-roll-from="0" data-roll-to="${w.v}">${w.v}</span><small>${w.u}</small></span>
+        <span class="w-d">${w.d}</span>
+        <span class="w-bars" aria-hidden="true"><i style="--w:${pa}%"></i><i style="--w:100%"></i></span>
+        <span class="w-s">${w.s}</span><span class="sr"> — 아래 차트로 자세히 보기</span>
+      </a></li>`;
+    }).join('');
+    setTimeout(() => rollNumbers(host), reduceMotion ? 0 : 450);
+  }
+
+  /* ------------------------------------------------------------ 첫 화면 오른쪽 위 — 리포트(대시보드) 미리보기
+     · 처음에는 index.html 에 박아 둔 캡처(assets/dash-poster.webp)만 보인다 — 데모 파일(약 3MB)은 첫 화면을 느리게 만든다
+     · 넓은 화면 + 마우스 + 동작 줄이기 꺼짐일 때만, 페이지를 다 불러온 뒤 실제 데모를 붙여 「둘러보기」를 자동 재생한다
+     · 누르면 크게 보기(직접 조작) — 휴대폰 · 태블릿은 캡처를 누르면 바로 크게 보기 */
+  function renderHeroDash() {
+    const p = R.projects.find(x => x.featured), host = $('#heroDash'); if (!p || !host) return;
+    host.insertAdjacentHTML('beforeend', `
+      <button class="dash-shield" type="button" aria-label="대시보드 크게 보기 · 직접 조작"><span>${ICON.expand}크게 보기 · 직접 조작</span></button>
+      <span class="dash-badge">숫자는 모두 임의 값</span>
+      <p class="hd-cap" aria-hidden="true"></p>`);
+    $('.dash-shield', host).addEventListener('click', () => openDemo(p.demo));
+    let wide = false; try { wide = matchMedia('(min-width: 1101px) and (hover: hover) and (pointer: fine)').matches; } catch (e) {}
+    const saveData = !!(navigator.connection && navigator.connection.saveData);
+    if (!wide || reduceMotion || saveData || !p.tourSrc || !p.tour) return;
+    const T = p.tour, cap = $('.hd-cap', host);
+    const st = { t: 0, last: 0, raf: 0, ready: false, visible: true, on: false };
+    let ifr = null;
+    const post = m => { try { ifr.contentWindow.postMessage(m, '*'); } catch (e) {} };
+    const fit = () => { if (!ifr) return; const w = host.clientWidth, h = host.clientHeight, sc = w / 1440; ifr.style.transform = `scale(${sc})`; ifr.style.height = Math.max(810, Math.ceil(h / sc)) + 'px'; };
+    const chapter = () => { let c = ''; for (const [ct, t2] of T.chapters) if (st.t >= ct) c = t2; if (cap.textContent !== c) cap.textContent = c; };
+    const loop = now => {
+      if (!st.on) return;
+      st.t += Math.min(.1, (now - st.last) / 1000); st.last = now;
+      if (st.t > T.duration + 1) st.t = 0;
+      post({ type: 'tour', t: st.t }); chapter();
+      st.raf = requestAnimationFrame(loop);
+    };
+    const run = () => { const go = st.ready && st.visible && document.visibilityState === 'visible'; if (go === st.on) return; st.on = go; if (go) { st.last = performance.now(); st.raf = requestAnimationFrame(loop); } else cancelAnimationFrame(st.raf); };
+    const mount = () => {
+      ifr = el('iframe', { class: 'hd-live', src: p.tourSrc, title: '퍼포먼스 대시보드 둘러보기', tabindex: '-1', 'aria-hidden': 'true' });
+      host.insertBefore(ifr, $('.dash-shield', host));
+      fit(); if ('ResizeObserver' in window) new ResizeObserver(fit).observe(host);
+      addEventListener('message', e => {
+        if (!ifr || e.source !== ifr.contentWindow || !e.data || e.data.type !== 'dash-ready') return;
+        st.ready = true; post({ type: 'tour', t: st.t }); host.classList.add('is-live'); run();
+      });
+      if ('IntersectionObserver' in window) new IntersectionObserver(es => { st.visible = es[0].isIntersecting; run(); }, { threshold: 0.15 }).observe(host);
+      document.addEventListener('visibilitychange', run);
+    };
+    // 첫 화면 글자 · 사진 · 차트가 다 뜬 뒤에 — 브라우저가 한가할 때 붙인다
+    const later = () => (window.requestIdleCallback ? requestIdleCallback(mount, { timeout: 2500 }) : setTimeout(mount, 600));
+    if (document.readyState === 'complete') setTimeout(later, 400); else addEventListener('load', () => setTimeout(later, 400), { once: true });
+  }
+
+  /* ------------------------------------------------------------ 4칸 모션 보드 — 「광고 성과 — 운영 전과 비교」 구간
+     (2026-09-26) 첫 화면에서 한 칸 아래로 옮겼다. 첫 화면 「광고 성과」 네 칸이 이 카드(#mb-…)로 이어진다 */
   function renderBoard() {
     const host = $('#mboard');
     R.board.forEach((b, i) => {
-      const a = el('article', { class: 'mp', 'data-id': b.id, style: `--d:${i}` });
+      const a = el('article', { class: 'mp', id: 'mb-' + b.id, 'data-id': b.id, style: `--d:${i}` });
       a.innerHTML = `
         <header><div>${b.group ? `<span class="mp-group g-${b.tone === 'eff' ? 'body' : 'roas'}">${b.group}</span>` : ''}<h3>${b.title}</h3></div><span class="mp-tag">${b.tag}</span></header>
         <div class="mp-big">${b.from ? `<span class="from">${b.from}${b.unit}</span><span class="ar" aria-hidden="true">→</span>` : ''}<span class="to shine" data-roll-from="${b.from || '0'}" data-roll-to="${b.to}">${b.to}<small>${b.unit}</small></span></div>
@@ -256,7 +311,8 @@
     }); }, { passive: true });
     let visible = false;
     if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0.2 }).observe(host);
-    setTimeout(() => { cards.forEach((c, i) => setTimeout(() => c._draw(true), i * 180)); rollNumbers(host); }, reduceMotion ? 0 : 500);
+    // 첫 화면 밖이라 — 화면에 들어왔을 때 처음 한 번 그려 보이고 숫자를 굴린다
+    onFirstView(host, () => setTimeout(() => { cards.forEach((c, i) => setTimeout(() => c._draw(true), i * 180)); rollNumbers(host); }, reduceMotion ? 0 : 150), 0.2);
     if (!reduceMotion) setInterval(() => { if (visible && document.visibilityState === 'visible') cards.forEach((c, i) => setTimeout(() => c._draw(true), i * 220)); }, 12000);
   }
   function animateBoard(svg, id) {
@@ -301,8 +357,8 @@
       hideTip();
     });
   }
-  // 첫 화면이 한 화면에 들어오도록 — 창 높이에 맞춰 차트 높이를 정한다 (넓은 화면 2열 배치일 때만)
-  const boardH = () => innerWidth > 1100 ? Math.max(80, Math.min(118, Math.round((innerHeight - 520) / 2))) : 110;
+  // 차트 높이 — (2026-09-26) 보드가 첫 화면 밖으로 옮겨 가 창 높이에 맞출 필요가 없어졌다
+  const boardH = () => 110;
   const BOARD = {
     /* (2026-09-26) 매체 한 칸 = 그 매체의 개선 하나.
        line — 월별 ROAS 선(series.js 의 roas[b.series]). 운영 전 평균 점선 + b.mark 기간 평균 구간선
@@ -337,7 +393,7 @@
     pair(box, b) {
       const rows = b.rows, col = b.color || 'var(--accent)';
       const W = Math.max(240, box.clientWidth || 360), H = boardH(), rowH = (H - 6) / rows.length;
-      const lw = 58, vw = 58, bwMax = Math.max(60, W - lw - vw - 6);
+      const lw = 66, vw = 58, bwMax = Math.max(60, W - lw - vw - 6);   // lw — 「월 전환매출」 이름이 막대에 겹치지 않는 폭
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${b.title} 개선 전후` });
       rows.forEach(([name, la, a, lb, v, unit, dec = 0], k) => {
         const y0 = 3 + k * rowH, bh = Math.max(9, Math.min(16, rowH / 2 - 7)), max = Math.max(a, v) * 1.02;
@@ -1315,6 +1371,8 @@
   paintPeriods();
   renderTicker();
   renderHero();
+  renderWins();
+  renderHeroDash();
   renderBoard();
   renderGrowth();
   renderShowcase();
@@ -1330,6 +1388,5 @@
   wireChrome();
   wireDock();
   wireAnimBudget();
-  onFirstView($('#kpis'), () => setTimeout(() => rollNumbers($('#kpis')), reduceMotion ? 0 : 200), 0.2);
   onFirstView($('#perfChart'), () => drawPerf(true), 0.2);
 })();
