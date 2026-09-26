@@ -1738,3 +1738,26 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
   .mast .tools { order: 1; margin-left: auto; }
   .mast nav { order: 2; flex: 1 0 100%; margin-left: 0; }
 }
+
+/* (2026-09-26) 서비스 카드 매체 이름(쿠팡 1P (로켓) · 쿠팡 3P (윙) · 네이버 · 메타)을 더 크게 — 매체별로 고르는 칸이라 이름이 먼저 보이게 */
+.svc h3 { font-size: clamp(20px, 1.75vw, 23px); letter-spacing: -0.04em; }
+.svc header .emo { font-size: 26px; }
+.svc header { gap: 12px; }
+@media print { .svc h3 { font-size: 15pt; } .svc header .emo { font-size: 17pt; } }
+/* (2026-09-26) 계약 형태 이름(퍼포먼스 운영 대행 · 상품 SEO · 그로스 옵션 · 진단 · 컨설팅)도 같은 크기로 */
+.plan h3 { font-size: clamp(20px, 1.75vw, 23px); letter-spacing: -0.04em; }
+.plan .ptag { font-size: 12.5px; padding: 4px 10px; }
+@media print { .plan h3 { font-size: 15pt; } }
+/* (2026-09-26) 첫 4주 단계 이름(진단 리포트 · 구조 개편안 · 목표 합의 …)과 서비스 아래 두 칸 제목도 한 단계 크게 */
+.onboard h4 { font-size: clamp(19px, 1.6vw, 21px); letter-spacing: -0.04em; line-height: 1.3; }
+.onboard .wk { font-size: 12.5px; }
+.svcfit h3 { font-size: clamp(18px, 1.5vw, 20px); letter-spacing: -0.035em; }
+@media print { .onboard h4 { font-size: 13.5pt; } .svcfit h3 { font-size: 13.5pt; } }
+/* (2026-09-26) 진행 방식 다섯 단계 이름(진단 · 목표 합의 · 퍼포먼스 운영 · 키워드 · SEO · 리포트 · 확장)도 같은 단계로 */
+.proc h3 { font-size: clamp(19px, 1.6vw, 21px); letter-spacing: -0.04em; }
+.proc .pn { font-size: 30px; }
+.proc p { font-size: 14px; }
+@media print { .proc h3 { font-size: 13.5pt; } }
+/* 카드 제목을 키운 만큼 그 위 소제목(맡기시면 첫 4주 · 계약 형태 · 자주 묻는 질문)도 한 단계 위로 — 위계가 뒤집히지 않게 */
+.sub-h { font-size: clamp(21px, 1.9vw, 25px); letter-spacing: -0.04em; }
+@media print { .sub-h { font-size: 15pt; } }
