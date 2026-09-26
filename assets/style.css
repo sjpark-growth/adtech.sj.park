@@ -1814,3 +1814,21 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 .svcfit section { padding: 20px 22px; }
 @media (max-width: 600px) { .svcfit h3 { font-size: 22px; } }
 @media print { .svcfit h3 { font-size: 15pt; } }
+/* (2026-09-26) 한 줄 칸 이름(카카오 · 버티컬몰 · 오픈마켓 · 상품 SEO · 상품당 · 쿠폰 · 프로모션 · 상품 구성) 한 번 더 크게 */
+.svc-mini .mk b { font-size: clamp(23px, 2.15vw, 28px); line-height: 1.2; white-space: nowrap; }
+.svc-mini > a, .svc-mini > div { padding: 16px 18px; }
+@media (max-width: 600px) { .svc-mini .mk b { font-size: 23px; } }
+@media print { .svc-mini .mk b { font-size: 15pt; } }
+/* 구분 머리(PERFORMANCE · ALSO · SEO+)도 크게 — 아래 칸 이름이 커진 만큼 */
+.svc-tier { align-items: baseline; gap: 14px; margin-top: 18px; padding-bottom: 10px; }
+.svc-tier b { font-size: clamp(18px, 1.6vw, 21px); letter-spacing: .1em; }
+.svc-tier span { font-size: 15px; }
+@media (max-width: 600px) { .svc-tier b { font-size: 18px; } .svc-tier span { font-size: 14px; } }
+@media print { .svc-tier b { font-size: 12pt; } }
+/* 칸 이름이 커져 좁은 3열(601~1200px)에서는 오른쪽 수치와 부딪힌다 → 그 폭에서는 수치를 이름 아래로 */
+@media screen and (min-width: 601px) and (max-width: 1200px) {
+  .svc-mini > a, .svc-mini > div { grid-template-columns: auto minmax(0, 1fr); row-gap: 6px; align-items: start; }
+  .svc-mini .emo { grid-row: span 2; align-self: center; }
+  .svc-mini .mv { grid-column: 2; flex-direction: row; align-items: baseline; gap: 8px; text-align: left; }
+  .svc-mini .mk b { white-space: normal; }
+}
