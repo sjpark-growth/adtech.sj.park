@@ -1788,3 +1788,29 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 @media (min-width: 1101px) { .mb-h h2 { font-size: clamp(21px, 1.9vw, 26px); } }
 @media (max-width: 600px) { .summary .sum-l > #sum-h { font-size: 26px; } .job-side .co { font-size: 21px; } }
 @media print { .belief h3, .proj h3, .gcard h3, .svc h3, .plan h3 { font-size: 15pt; } .proc h3, .onboard h4, .pillar h3, .svcfit h3 { font-size: 13.5pt; } .sub-h { font-size: 16pt; } }
+
+/* (2026-09-26) 서비스 카드 매체 이름을 크게 — 광고주가 맡길 매체를 여기서 고르므로 카드에서 가장 먼저 보이게(본인 요청 「크기 많이」) */
+.svc header { gap: 14px; }
+.svc h3 { font-size: clamp(27px, 2.5vw, 33px); line-height: 1.15; letter-spacing: -0.045em; }
+.svc header .emo { font-size: clamp(30px, 2.6vw, 36px); }
+@media (max-width: 600px) { .svc h3 { font-size: 24px; } .svc header .emo { font-size: 28px; } }
+@media print { .svc h3 { font-size: 18pt; } .svc header .emo { font-size: 19pt; } }
+/* 한 줄 칸(카카오 · 버티컬몰 · 오픈마켓 · 상품 SEO …) 이름도 크게 — 위 매체 카드와 급을 맞춘다 */
+.svc-mini > a, .svc-mini > div { gap: 14px; padding: 14px 18px; }
+.svc-mini .emo { font-size: 26px; }
+.svc-mini .mk b { font-size: clamp(19px, 1.65vw, 22px); letter-spacing: -0.04em; }
+.svc-mini .mk small { font-size: 12.5px; }
+.svc-mini .mv b { font-size: 20px; }
+@media (max-width: 600px) { .svc-mini .mk b { font-size: 19px; } .svc-mini .emo { font-size: 24px; } }
+@media print { .svc-mini .mk b { font-size: 13pt; } }
+/* (2026-09-26) 이모지(특수문자)는 원래 크기로 두고 글자만 키운다 — 본인 요청 */
+.svc header .emo { font-size: 22px; }
+.svc-mini .emo { font-size: 18px; }
+.svc-mini .mk b { font-size: clamp(20px, 1.85vw, 24px); }
+@media (max-width: 600px) { .svc header .emo { font-size: 22px; } .svc-mini .emo { font-size: 18px; } .svc-mini .mk b { font-size: 20px; } }
+@media print { .svc header .emo { font-size: 14pt; } .svc-mini .emo { font-size: 12pt; } }
+/* 서비스 아래 두 칸 제목(이런 브랜드에 잘 맞습니다 · 주간 리포트에 들어가는 것)도 크게 */
+.svcfit h3 { font-size: clamp(23px, 2.1vw, 28px); letter-spacing: -0.045em; margin-bottom: 12px; }
+.svcfit section { padding: 20px 22px; }
+@media (max-width: 600px) { .svcfit h3 { font-size: 22px; } }
+@media print { .svcfit h3 { font-size: 15pt; } }
