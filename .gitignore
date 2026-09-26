@@ -1,0 +1,15 @@
+# 작업용 자료 — 절대 올리지 않는다
+_work/
+*.bak
+*.bak.js
+*.xlsx
+*.csv
+Thumbs.db
+desktop.ini
+.claude/
+# 게시하지 않는 파일 — 작업 메모 · 이전 직장 화면 캡처 · 빈 영상 폴더 (2026-09-26)
+CLAUDE.md
+README.md
+RECOVERY.md
+archive/
+videos/

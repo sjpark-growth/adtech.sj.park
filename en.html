@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seongjoon Park · Freelance Performance Marketer</title>
+<meta name="description" content="Freelance performance marketer for Korean e-commerce — Coupang, Naver and Meta run directly. Coupang 1P ROAS +468%p, Meta revenue 5.6×.">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f3f5f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a1019" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Seongjoon Park · Freelance Performance Marketer">
+<meta property="og:description" content="Coupang · Naver · Meta run directly — Coupang 1P ROAS +468%p, Naver GFA +282%p, Meta revenue 5.6×.">
+<meta property="og:url" content="https://sjpark-growth.github.io/adtech.sj.park/en.html">
+<meta property="og:image" content="https://sjpark-growth.github.io/adtech.sj.park/assets/og-card-freelance.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230c1a2b'/%3E%3Cpath d='M7 22 L13 15 L18 18 L25 9' fill='none' stroke='%238b9bff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<!-- 색 · 글꼴 토큰은 한국어판과 같은 파일에서 가져온다 (외부 요청 없음) -->
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  /* 영문 요약은 한 장짜리라 한국어판 레이아웃을 쓰지 않는다 — 토큰만 빌려 쓰고 배치는 여기서 한다 */
+  body { background: var(--paper); color: var(--ink); font-family: var(--f-sans); line-height: 1.6; margin: 0; }
+  .en { max-width: 940px; margin: 0 auto; padding: 44px 22px 72px; }
+  .en a { color: var(--accent); }
+  .en-top { display: flex; gap: 22px; align-items: flex-start; flex-wrap: wrap; }
+  .en-photo { width: 104px; height: 139px; border-radius: 10px; object-fit: cover; border: 1px solid var(--ring); flex: none; }
+  .en-id { min-width: 0; flex: 1 1 320px; }
+  .en-eyebrow { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+  .en h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.12; letter-spacing: -.03em; margin: 0 0 10px; }
+  .en-thesis { font-size: clamp(17px, 2.4vw, 21px); font-weight: 600; letter-spacing: -.02em; margin: 0 0 14px; }
+  .en-thesis em { font-style: normal; color: var(--accent-ink); }
+  .en-lede { color: var(--ink-2); margin: 0 0 16px; }
+  .en-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 6px; padding: 0; list-style: none; }
+  .en-chips li { border: 1px solid var(--ring); border-radius: 999px; padding: 5px 13px; font-size: 13.5px; background: var(--surface); }
+  .en-chips a { text-decoration: none; }
+  h2.en-h { font-family: var(--f-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3);
+            margin: 42px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .en-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; padding: 0; margin: 0; list-style: none; }
+  .en-kpis li { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 15px 16px; }
+  .en-kpis .v { display: block; font-family: var(--f-num); font-size: 30px; font-weight: 700; letter-spacing: -.02em; line-height: 1.05; }
+  .en-kpis .v small { font-size: 17px; font-weight: 600; margin-left: 2px; color: var(--accent-ink); }
+  .en-kpis .k { display: block; margin-top: 7px; font-size: 14px; font-weight: 600; }
+  .en-kpis .d { display: block; margin-top: 3px; font-size: 12.5px; color: var(--ink-3); }
+  .en-note { font-size: 12.5px; color: var(--ink-3); margin: 12px 0 0; }
+  .en-do { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; padding: 0; margin: 0; list-style: none; }
+  .en-do li { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 15px 16px; }
+  .en-do b { display: block; font-size: 13px; font-family: var(--f-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: 6px; }
+  .en-do span { font-size: 14px; color: var(--ink-2); }
+  .en-job { border-top: 1px solid var(--rule); padding: 16px 0; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 18px; break-inside: avoid; }
+  .en-job:first-of-type { border-top: 0; }
+  .en-job .co { font-weight: 700; font-size: 16px; }
+  .en-job .meta { font-size: 12.5px; color: var(--ink-3); margin-top: 3px; }
+  .en-job ul { margin: 0; padding-left: 17px; }
+  .en-job li { font-size: 14px; margin-bottom: 4px; color: var(--ink-2); }
+  .en-job li strong { color: var(--ink); }
+  .en-tools p { margin: 0 0 9px; font-size: 14px; color: var(--ink-2); }
+  .en-tools b { color: var(--ink); font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+  .en-foot { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--ink-3); }
+  .en-sc { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .en-sc th { text-align: left; font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; padding: 0 10px 8px 0; border-bottom: 1px solid var(--rule); }
+  .en-sc td { padding: 10px 10px 10px 0; border-bottom: 1px solid var(--rule); color: var(--ink-2); vertical-align: top; }
+  .en-sc td:first-child { color: var(--ink); font-weight: 700; }
+  .en-sc td.n { font-family: var(--f-num); font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
+  .en-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; padding: 0; margin: 0; list-style: none; }
+  .en-plans li { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 15px 16px; display: flex; flex-direction: column; gap: 6px; }
+  .en-plans li.hot { border-color: var(--accent); }
+  .en-plans b { font-size: 15.5px; }
+  .en-plans span { font-size: 14px; color: var(--ink-2); }
+  .en-plans em { font-style: normal; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--rule); font-weight: 700; font-size: 14px; }
+  .en-steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; counter-reset: s; }
+  .en-steps li { counter-increment: s; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; font-size: 14px; color: var(--ink-2); }
+  .en-steps li::before { content: "0" counter(s); font-family: var(--f-num); font-weight: 700; font-size: 18px; color: var(--accent-ink); line-height: 1.35; }
+  .en-steps b { color: var(--ink); }
+  .en-kpis.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .en-do.c2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 760px) { .en-kpis.c3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .en-do.c2 { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 460px) { .en-kpis.c3 { grid-template-columns: minmax(0, 1fr); } }
+  .en-cta { margin-top: 18px; padding: 16px 18px; border-radius: 12px; background: var(--accent-soft); font-size: 14.5px; }
+  .en-cta ol { margin: 6px 0 0; padding-left: 20px; }
+  @media (max-width: 640px) { .en-job { grid-template-columns: minmax(0, 1fr); gap: 8px; } .en-sc th:nth-child(4), .en-sc td:nth-child(4) { display: none; } }
+  @media print { .en { padding: 0; max-width: none; } h2.en-h { break-after: avoid; } .en-kpis li, .en-do li, .en-plans li { break-inside: avoid; } }
+  /* 상단 바 — 한국어판과 같은 .mast · .iconbtn 스타일을 쓴다. 섹션 제목은 바 높이만큼 띄워 가리지 않게 */
+  .en [id] { scroll-margin-top: 72px; }
+  .mast .iconbtn.go { text-decoration: none; gap: 0; }
+  .mast .iconbtn.go.hot { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .mast .tools .iconbtn span.lg { font: inherit; padding: 0; background: none; color: inherit; border-radius: 0; transform: none !important; white-space: pre; }
+  @media (max-width: 600px) { .mast .iconbtn .lg { display: none; } }
+</style>
+<script>
+  /* 테마: 한국어판과 같은 저장값(psj-theme)을 먼저 찍어 깜빡임을 막는다 */
+  try { var t = localStorage.getItem('psj-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+
+<header class="mast" id="top">
+  <div class="shell">
+    <a class="id" href="#top" style="text-decoration:none;color:inherit">Seongjoon Park <small>Freelance</small></a>
+    <nav aria-label="Sections">
+      <a href="#results">Results</a>
+      <a href="#services">Services</a>
+      <a href="#how">How I work</a>
+      <a href="#career">Career</a>
+      <a href="#contact" class="nav-hot">Contact</a>
+    </nav>
+    <div class="tools">
+      <button class="iconbtn" id="themeBtn" type="button" aria-label="Change color theme">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11" /><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></svg>
+        <span id="themeLabel">Auto</span>
+      </button>
+      <a class="iconbtn go hot" href="./" hreflang="ko" title="Full page in Korean — channel charts, case videos, services and FAQ"><span class="lg">Full page </span>(KO) ↗</a>
+      <a class="iconbtn go" href="dashboard-demo.html?video&amp;explore&amp;r=0926" target="_blank" rel="noopener" title="Live demo of the performance dashboard (numbers are dummy values)"><span class="lg">Live </span>demo ↗</a>
+      <button class="iconbtn" id="printBtn" type="button" title="Save this page as PDF or print">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6V2h8v4"/><rect x="2" y="6" width="12" height="6" rx="1.5"/><path d="M4.5 10h7v4h-7z"/></svg>
+        PDF
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="en">
+
+  <div class="en-top">
+    <img class="en-photo" src="assets/profile.webp" alt="Seongjoon Park" width="104" height="139">
+    <div class="en-id">
+      <p class="en-eyebrow">Freelance performance marketer · Coupang · Naver · Meta · 8 yrs 10 mos</p>
+      <h1>Seongjoon Park</h1>
+      <p class="en-thesis">No wasted ad spend — and <em>ROAS pushed all the way</em>.</p>
+      <p class="en-lede">I run ads for Korean e-commerce brands with <b>₩0.5B – ₩10B</b> in annual ad spend. Today I lead every external marketplace and run own-store ads hands-on for a brand spending <b>about ₩10B a year</b>. I operate <b>Coupang, Naver and Meta directly</b>, without agencies, and scale budget <b>only where efficiency is proven</b>. Hire me for one channel or all three.</p>
+      <ul class="en-chips">
+        <li><a href="mailto:j1o2o1n7@naver.com">j1o2o1n7@naver.com</a></li>
+        <li>+82 10-8916-5977</li>
+        <li>Seoul · remote OK</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="en-h" id="results">Results by channel — before vs after I took over</h2>
+  <ul class="en-kpis c3">
+    <li><span class="v">+468<small>%p</small></span><span class="k">Coupang 1P (Rocket) ROAS</span><span class="d">1,426% → 1,893% · conversion revenue +20% on 15.9% less spend</span></li>
+    <li><span class="v">+100.2<small>%</small></span><span class="k">Coupang Wing (3P) conversion revenue</span><span class="d">₩170M → ₩340M a month · ROAS 437% → 659%</span></li>
+    <li><span class="v">+282<small>%p</small></span><span class="k">Naver GFA ROAS</span><span class="d">304% → 586% · bids weighted by gender, age, placement and hour</span></li>
+    <li><span class="v">+66.2<small>%</small></span><span class="k">Naver conversion revenue</span><span class="d">₩170M → ₩290M a month · on +59.5% spend</span></li>
+    <li><span class="v">5.6<small>×</small></span><span class="k">Meta conversion revenue (own store)</span><span class="d">₩430M → ₩2.37B a month · spend scaled 4.5× with ROAS 212% → 262%</span></li>
+    <li><span class="v">+366<small>%p</small></span><span class="k">Blended ROAS across 9 channels</span><span class="d">964% → 1,330% · H1 2026 vs H1 2025</span></li>
+  </ul>
+  <p class="en-note">ROAS = conversion revenue ÷ ad spend, before marketplace fees and VAT; period figures are spend-weighted. Meta figures use 1-day click attribution (the conservative basis). As of 2026-09-09. ₩1B ≈ USD 750K. Company and brand names are anonymized.</p>
+
+  <h2 class="en-h" id="brands">Brands I have run ads for</h2>
+  <table class="en-sc">
+    <thead><tr><th>Brand</th><th>Annual revenue</th><th>Annual ad spend</th><th>My role</th></tr></thead>
+    <tbody>
+      <tr><td>Company A <small>(Brands A · B)</small></td><td class="n">₩140B</td><td class="n">~₩10B</td><td>Lead for all external marketplaces (9 channels) + own-store ads hands-on — 2025 to now</td></tr>
+      <tr><td>Brand F</td><td class="n">₩58B</td><td class="n">~₩3B</td><td>Marketing team lead — owned the ad budget</td></tr>
+      <tr><td>Brand D</td><td class="n">₩20B</td><td class="n">~₩1B</td><td>Marketing team lead — owned the ad budget</td></tr>
+      <tr><td>Brand E</td><td class="n">₩10B</td><td class="n">~₩0.5B</td><td>Marketing team lead — owned the ad budget</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="en-h" id="services">Services — pick the channel you need</h2>
+  <ul class="en-do c2">
+    <li><b>Coupang 1P (Rocket)</b><span>Budget caps split by placement (search / non-search), product group and pack size; campaign-level bidding. Coupang SEO took monthly clicked keywords from 7,263 to 15,424 (+112.4%); conversion rate 9.0% → 17.7%.</span></li>
+    <li><b>Coupang 3P (Wing)</b><span>Wing-only assortment (bundles of low-price 1P items), New Customer Ads run on acquisition cost, and product SEO — monthly clicked keywords 2,907 → 5,479 (+88.5%).</span></li>
+    <li><b>Naver (Search Ads · GFA)</b><span>Rebuilt Shopping Search, Power Link and GFA — Shopping Search budget share 40% → 70% after evening out placement efficiency; weighted GFA bidding; Smart Store SEO and lifted exposure restrictions.</span></li>
+    <li><b>Meta (own store · CPAS)</b><span>Scaled budget capacity: monthly spend ₩200M → ₩900M while half-year ROAS went 212% → 272% → 289% (1-day click). Lookalike, Advantage+ and retargeting by new vs returning buyers; Collaborative Ads to Smart Store, Coupang, Ably and Olive Young.</span></li>
+  </ul>
+  <p class="en-note">Also: Kakao (Moment, Bizboard, Talk Deal), vertical marketplaces (Kurly, B-Mart, Ezwel, Ably — 2.9× the category leaders' efficiency on Kurly) and open markets (Auction and Gmarket via ESM PLUS, 11st).</p>
+
+  <h2 class="en-h" id="how">How I work</h2>
+  <ol class="en-steps">
+    <li><span><b>Diagnose</b> — budget flow, brand-keyword dependency and efficiency by placement. Find where spend is leaking first.</span></li>
+    <li><span><b>Agree on goals</b> — ROAS and revenue targets plus the guardrails to hold, e.g. a ROAS floor or a daily budget.</span></li>
+    <li><span><b>Run performance</b> — rebuild campaign structure; adjust bids, budgets and products daily. Every change is logged.</span></li>
+    <li><span><b>Keywords · SEO</b> — widen the keywords ads can win, and fix product names, tags, attributes and categories so products rank without ads.</span></li>
+    <li><span><b>Report · scale</b> — one weekly set of numbers in the performance data dashboard; budget grows only where efficiency is proven.</span></li>
+  </ol>
+
+  <h2 class="en-h" id="plans">Engagement</h2>
+  <ul class="en-plans">
+    <li class="hot"><b>Performance management</b><span>Choose any of Coupang, Naver and Meta. Weekly report through the performance data dashboard, monthly review, keyword and SEO check on key products included.</span><em>Quote after a call + dashboard setup fee</em></li>
+    <li><b>Product SEO</b><span>Basic: product name, search tags, attributes, category. Advanced: keyword research, structure, option and bundle mapping, two-week rank tracking. Ingredient and content keywords are verified by the seller before they go live.</span><em>₩20K basic · ₩30K advanced / product</em></li>
+    <li><b>Dashboard setup</b><span>Past data is pulled and reconciled with the source reports — one channel with 6 months of history, +₩150K per extra channel, +₩200K for 12+ months. Your data stays available up to the last day of the contract.</span><em>From ₩300K, one-time</em></li>
+    <li><b>Audit · consulting</b><span>Ad account audit with a prioritized fix list by channel, plus a playbook your in-house team can run.</span><em>Quote after a call</em></li>
+  </ul>
+  <p class="en-note">Ad spend is paid by the brand directly to each channel — I invoice the management fee only.</p>
+
+  <h2 class="en-h" id="career">Career</h2>
+
+  <section class="en-job">
+    <div><div class="co">Company A</div><div class="meta">Jul 2025 – present · Performance Marketing<br>Brands A · B — ₩140B revenue, ~₩10B ad spend</div></div>
+    <ul>
+      <li>Run <strong>9 ad channels</strong> across external marketplaces (monthly spend ₩100M → ₩190M), now also own-store ads (Meta and others) hands-on.</li>
+      <li>Coupang 1P ROAS <strong>1,426% → 1,893%</strong>; Wing revenue <strong>₩170M → ₩340M</strong> a month; Naver GFA <strong>304% → 586%</strong>; Meta revenue <strong>5.6×</strong>.</li>
+      <li>Blended ROAS <strong>964% → 1,330%</strong>; total revenue on key marketplaces <strong>+36.6%</strong> with paid share held flat.</li>
+      <li>Built the unified performance dashboard — daily monitoring down to product level.</li>
+    </ul>
+  </section>
+
+  <section class="en-job">
+    <div><div class="co">Company B</div><div class="meta">May 2024 – Jun 2025 · Online MD / Sales Manager<br>Brand C and four other consumer brands</div></div>
+    <ul>
+      <li>Naver Search Ads ROAS <strong>182% → 514%</strong>; GFA and Meta launched at <strong>380%</strong> and <strong>408%</strong>.</li>
+      <li>Naver Shopping rank <strong>63rd → 3rd</strong>; revenue on owned marketplaces <strong>+5,000%</strong> year over year.</li>
+    </ul>
+  </section>
+
+  <section class="en-job">
+    <div><div class="co">Company C</div><div class="meta">May 2022 – Nov 2023 · Marketing Manager → Team Lead<br>Brands D · E (home fitness · yoga)</div></div>
+    <ul>
+      <li>Naver ROAS <strong>177% → 368%</strong>; Naver non-paid traffic <strong>+128%</strong>; Coupang consignment revenue <strong>+304%</strong>.</li>
+      <li>Turned an operating loss of <strong>₩890M</strong> into a profit of about <strong>₩500M</strong>; RPA saved <strong>2,860 hours</strong> a year.</li>
+    </ul>
+  </section>
+
+  <section class="en-job">
+    <div><div class="co">Company D</div><div class="meta">Jul 2020 – Mar 2022 · Marketing Manager → Team Lead<br>Brands F · G — ₩58B revenue, ~₩3B ad spend</div></div>
+    <ul>
+      <li>Category-specific strategy cut ad spend <strong>41%</strong> at equal revenue; Naver Brand Day peak daily revenue <strong>₩379M</strong>.</li>
+      <li>Rebuilt the marketing team from <strong>2 to 19</strong> people; record year of <strong>₩56.65B</strong> revenue.</li>
+    </ul>
+  </section>
+
+  <section class="en-job">
+    <div><div class="co">Earlier</div><div class="meta">2016 – 2020 · Marketplace operations</div></div>
+    <ul>
+      <li>Price-comparison matching and marketplace listing operations. As an MD I have managed <strong>30+ marketplaces</strong> directly.</li>
+    </ul>
+  </section>
+
+  <h2 class="en-h" id="tools">Tools</h2>
+  <div class="en-tools">
+    <p><b>Ads</b> &nbsp;Coupang Ads (1P / 3P / NCA) · Naver Search Ads, Shopping Search, GFA · Meta and Collaborative Ads (CPAS) · Kakao Moment · ESM PLUS · 11st · Kurly · B-Mart · Ably · GDN · Mobion</p>
+    <p><b>Commerce</b> &nbsp;Coupang Rocket / Wing · Naver Smart Store and Brand Store · Auction · Gmarket · 11st · Kakao · Cafe24 · Godomall</p>
+    <p><b>Data &amp; automation</b> &nbsp;Excel · Google Sheets · GA4 · GTM · Claude Code · Power Automate · UiPath · Zapier · Make</p>
+    <p><b>Certifications</b> &nbsp;Search Ad Marketer Level 1 (KAIT, 2022) · Google Analytics IQ (2024)</p>
+  </div>
+
+  <h2 class="en-h" id="contact">Contact</h2>
+  <div class="en-tools">
+    <p><b>Email</b> &nbsp;<a href="mailto:j1o2o1n7@naver.com">j1o2o1n7@naver.com</a> — the fastest way to reach me; I usually reply within a day.</p>
+    <p><b>Phone</b> &nbsp;+82 10-8916-5977</p>
+    <p><b>Based in</b> &nbsp;Seoul, South Korea · remote OK, in-person meetings in Seoul when needed</p>
+  </div>
+  <div class="en-cta">
+    <b>Send these four and the first reply gets faster:</b>
+    <ol><li>Channels you run now</li><li>Monthly ad spend</li><li>Goal (ROAS · revenue)</li><li>Whether I can view the ad accounts</li></ol>
+  </div>
+
+  <p class="en-foot">
+    This one-page summary is written for English-speaking readers. The full page — channel charts, case videos, services and FAQ — is in Korean: <a href="./">open the Korean page</a>.<br>
+    © Seongjoon Park · 2026
+  </p>
+
+</main>
+<script>
+  /* 테마 버튼 · PDF 버튼 — 한국어판(app.js wireChrome)과 같은 동작 */
+  (function () {
+    var root = document.documentElement, label = document.getElementById('themeLabel');
+    var names = { system: 'Auto', light: 'Light', dark: 'Dark' };
+    var cur = function () { return root.getAttribute('data-theme') || 'system'; };
+    label.textContent = names[cur()];
+    document.getElementById('themeBtn').addEventListener('click', function () {
+      var next = { system: 'light', light: 'dark', dark: 'system' }[cur()];
+      if (next === 'system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', next);
+      try { next === 'system' ? localStorage.removeItem('psj-theme') : localStorage.setItem('psj-theme', next); } catch (e) {}
+      label.textContent = names[next];
+    });
+    document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
+  })();
+</script>
+</body>
+</html>
