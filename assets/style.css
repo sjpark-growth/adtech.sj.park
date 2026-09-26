@@ -1684,3 +1684,57 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
   .hero .mboard { flex: 1 1 auto; grid-auto-rows: 1fr; }
   .hero .mboard .mp { justify-content: space-between; }
 }
+
+/* ===== (2026-09-26) 내용 보강 — 잘 맞는 브랜드 · 주간 리포트 · 첫 4주 ===== */
+.svcfit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+.svcfit section { background: var(--surface); border: 1px solid var(--ring); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); }
+.svcfit h3 { margin: 0 0 10px; font-size: 16px; font-weight: 800; letter-spacing: -0.03em; }
+.svcfit ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.svcfit li { position: relative; padding-left: 24px; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+.svcfit li b { color: var(--ink); }
+.svcfit li::before { position: absolute; left: 0; top: 0; font-weight: 800; }
+.svcfit .fit-who li::before { content: "✓"; color: var(--good); }
+.svcfit .fit-rep li::before { content: "▸"; color: var(--accent); }
+@media (max-width: 760px) { .svcfit { grid-template-columns: minmax(0, 1fr); } }
+
+.onboard { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.onboard li { position: relative; overflow: hidden; background: var(--surface); border: 1px solid var(--ring); border-radius: 14px; padding: 18px 18px 18px; display: flex; flex-direction: column; gap: 6px; }
+.onboard li::before { content: ""; position: absolute; left: 0; top: 0; height: 3px; width: calc(var(--p, 1) * 100%); background: var(--accent); opacity: calc(.35 + var(--p, 1) * .65); }
+.onboard .wk { font-family: var(--f-mono); font-size: 11.5px; font-weight: 700; letter-spacing: .08em; color: var(--accent-ink); }
+.onboard h4 { margin: 0; font-size: 16px; font-weight: 800; letter-spacing: -0.03em; }
+.onboard p { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-2); }
+.onboard p b { color: var(--ink); }
+@media (max-width: 1000px) { .onboard { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .onboard { grid-template-columns: minmax(0, 1fr); } }
+@media print { .svcfit section, .onboard li { break-inside: avoid; box-shadow: none; } .onboard { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } .svcfit { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } }
+
+/* ===== (2026-09-26) 모바일 최적화 ===== */
+.mb-dots { display: none; }
+@media screen and (max-width: 600px) {
+  /* 첫 화면 성과 네 칸 — 세로로 쌓이면 화면 한 장 반을 차지해, 옆으로 넘겨 보게 한다 */
+  .hero .mboard { display: flex; gap: 10px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
+                  margin-inline: calc(-1 * var(--gut)); padding: 2px var(--gut) 6px; scroll-padding-inline: var(--gut); scrollbar-width: none; }
+  .hero .mboard::-webkit-scrollbar { display: none; }
+  .hero .mboard > .mp { flex: 0 0 86%; scroll-snap-align: start; }
+  .mb-dots { display: flex; justify-content: center; gap: 6px; margin-top: 2px; }
+  .mb-dots i { width: 6px; height: 6px; border-radius: 99px; background: var(--rule-2); transition: width .2s, background-color .2s; }
+  .mb-dots i.on { width: 18px; background: var(--accent); }
+
+  /* 경력 카드 — 한 줄로 쌓일 때는 결과(광고 성과)를 먼저 */
+  .job-main .groups > .g-result { order: -1; }
+
+  /* 누르는 곳은 손가락 크기로(최소 40px 안팎) */
+  .svc-see, .proj .see a, .job-main .see a, .pillar .ev a, .cta-note a, .foot a { display: inline-flex; align-items: center; min-height: 40px; }
+  .pillar .ev { row-gap: 0; }
+
+  /* 너무 작던 글자(10.5 ~ 11px) 한 단계 키우기 */
+  .mp-group, .mp-span, .hk .kpi .s, .phases .pp, .toolgrp h4, .gwhere, .tk-live, .player .badge { font-size: 12px; }
+  .hero .eyebrow b, .hero .eyebrow span, .proj-meta > span:not(.pill) { font-size: 12px; }
+}
+/* 태블릿(601 ~ 1100px) 상단 바 — 이름 · 메뉴 · 버튼이 세 줄로 쌓여 화면을 가리던 것을, 이름 + 버튼 한 줄 · 메뉴 한 줄로 */
+@media screen and (min-width: 601px) and (max-width: 1100px) {
+  .mast .shell { flex-wrap: wrap; row-gap: 6px; }
+  .mast .id { order: 0; }
+  .mast .tools { order: 1; margin-left: auto; }
+  .mast nav { order: 2; flex: 1 0 100%; margin-left: 0; }
+}

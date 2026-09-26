@@ -245,6 +245,15 @@
     const cards = $$('.mp', host);
     let rt = 0; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => cards.forEach(c => c._draw(false)), 120); });
     addEventListener('load', () => setTimeout(() => cards.forEach(c => c._draw(false)), 60)); // 창 높이가 확정된 뒤 한 번 더
+    /* (2026-09-26) 휴대폰에서는 네 칸을 옆으로 넘겨 본다(style.css) — 몇 번째 칸인지 점으로 알린다 */
+    const dots = el('div', { class: 'mb-dots', 'aria-hidden': 'true' });
+    dots.innerHTML = cards.map((_, i) => `<i${i ? '' : ' class="on"'}></i>`).join('');
+    host.after(dots);
+    let dt = 0;
+    host.addEventListener('scroll', () => { cancelAnimationFrame(dt); dt = requestAnimationFrame(() => {
+      const w = cards[0].getBoundingClientRect().width || 1, k = Math.round(host.scrollLeft / (w + 10));
+      $$('i', dots).forEach((d, i) => d.classList.toggle('on', i === Math.min(cards.length - 1, k)));
+    }); }, { passive: true });
     let visible = false;
     if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0.2 }).observe(host);
     setTimeout(() => { cards.forEach((c, i) => setTimeout(() => c._draw(true), i * 180)); rollNumbers(host); }, reduceMotion ? 0 : 500);
@@ -1108,6 +1117,9 @@
         ${it.see ? `<a class="svc-see" href="${linkOf(it.see)}">관련 사례 · ${shortTitle(it.see)} →</a>` : ''}
       </article>`;
     /* tier(퍼포먼스 · 그로스)별로 묶어서 그린다 — tiers 가 없으면 한 덩어리로 */
+    /* 카드 아래 두 칸 — 잘 맞는 브랜드 · 주간 리포트 */
+    const fitBox = (o, cls) => o ? `<section class="${cls}"><h3>${o.h}</h3><ul>${o.items.map(x => `<li>${x}</li>`).join('')}</ul></section>` : '';
+    if ((S.fit || S.report) && $('#svcFit')) { $('#svcFit').innerHTML = fitBox(S.fit, 'fit-who') + fitBox(S.report, 'fit-rep'); $('#svcFit').hidden = false; }
     const tiers = S.tiers && S.tiers.length ? S.tiers : [{ id: null }];
     $('#svcGrid').innerHTML = tiers.map(t => {
       const list = S.items.filter(it => !t.id || (it.tier || 'perf') === t.id);
@@ -1117,6 +1129,10 @@
     }).join('');
   }
   function renderProcess() {
+    if (R.onboard && R.onboard.length) {
+      $('#onboard').innerHTML = R.onboard.map((o, i) => `<li style="--p:${(i + 1) / R.onboard.length}"><span class="wk">${o.w}</span><h4>${o.t}</h4><p>${o.d}</p></li>`).join('');
+      $('#onboard').hidden = false; $('#onboard-h').hidden = false;
+    }
     if (R.process) $('#procList').innerHTML = R.process.map((p, i) => `<li><span class="pn">${String(i + 1).padStart(2, '0')}</span><h3>${p.t}</h3><p>${p.d}</p></li>`).join('');
     if (R.plans) $('#planGrid').innerHTML = R.plans.map(p => `
       <article class="plan${p.hot ? ' hot' : ''}">

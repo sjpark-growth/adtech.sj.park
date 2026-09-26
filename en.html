@@ -77,6 +77,18 @@
   .en-do.c2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   @media (max-width: 760px) { .en-kpis.c3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .en-do.c2 { grid-template-columns: minmax(0, 1fr); } }
   @media (max-width: 460px) { .en-kpis.c3 { grid-template-columns: minmax(0, 1fr); } }
+  .en-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+  .en-two section { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px; padding: 15px 16px; }
+  .en-two h3 { margin: 0 0 8px; font-size: 15px; }
+  .en-two ul { margin: 0; padding-left: 18px; }
+  .en-two li { font-size: 14px; color: var(--ink-2); margin-bottom: 4px; }
+  .en-two li b { color: var(--ink); }
+  .en-weeks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 0; margin: 14px 0 0; list-style: none; }
+  .en-weeks li { background: var(--surface); border: 1px solid var(--ring); border-top: 3px solid var(--accent); border-radius: 12px; padding: 13px 14px; font-size: 13.5px; color: var(--ink-2); }
+  .en-weeks b { display: block; color: var(--ink); font-size: 14.5px; margin: 2px 0 4px; }
+  .en-weeks small { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .08em; color: var(--accent-ink); }
+  @media (max-width: 760px) { .en-two { grid-template-columns: minmax(0, 1fr); } .en-weeks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 460px) { .en-weeks { grid-template-columns: minmax(0, 1fr); } }
   .en-cta { margin-top: 18px; padding: 16px 18px; border-radius: 12px; background: var(--accent-soft); font-size: 14.5px; }
   .en-cta ol { margin: 6px 0 0; padding-left: 20px; }
   @media (max-width: 640px) { .en-job { grid-template-columns: minmax(0, 1fr); gap: 8px; } .en-sc th:nth-child(4), .en-sc td:nth-child(4) { display: none; } }
@@ -167,6 +179,20 @@
     <li><b>Meta (own store · CPAS)</b><span>Scaled budget capacity: monthly spend ₩200M → ₩900M while half-year ROAS went 212% → 272% → 289% (1-day click). Lookalike, Advantage+ and retargeting by new vs returning buyers; Collaborative Ads to Smart Store, Coupang, Ably and Olive Young.</span></li>
   </ul>
   <p class="en-note">Also: Kakao (Moment, Bizboard, Talk Deal), vertical marketplaces (Kurly, B-Mart, Ezwel, Ably — 2.9× the category leaders' efficiency on Kurly) and open markets (Auction and Gmarket via ESM PLUS, 11st).</p>
+  <div class="en-two">
+    <section><h3>A good fit if you are…</h3><ul>
+      <li>spending more on ads while <b>ROAS stays flat</b></li>
+      <li>running <b>Coupang Rocket and Wing together</b> and need the roles split</li>
+      <li>wanting to <b>scale Meta for your own store</b> without losing efficiency</li>
+      <li>getting reports but <b>still not sure where money leaks</b></li>
+    </ul></section>
+    <section><h3>Your weekly report</h3><ul>
+      <li><b>Spend · conversion revenue · ROAS</b> by channel, vs last week and last month</li>
+      <li><b>Budget pace</b> — month-end forecast and remaining budget</li>
+      <li><b>Change log</b> — what changed and how the numbers moved</li>
+      <li><b>Next week</b> — where to add, where to cut, what to test</li>
+    </ul></section>
+  </div>
 
   <h2 class="en-h" id="how">How I work</h2>
   <ol class="en-steps">
@@ -176,6 +202,12 @@
     <li><span><b>Keywords · SEO</b> — widen the keywords ads can win, and fix product names, tags, attributes and categories so products rank without ads.</span></li>
     <li><span><b>Report · scale</b> — one weekly set of numbers in the performance data dashboard; budget grows only where efficiency is proven.</span></li>
   </ol>
+  <ul class="en-weeks">
+    <li><small>WEEK 1</small><b>Audit report</b>With view access only — account structure, budget flow and leaking placements, ranked by priority.</li>
+    <li><small>WEEK 2</small><b>Restructure · goals</b>A campaign plan plus the guardrails we agree to hold, like a ROAS floor and daily budget.</li>
+    <li><small>WEEK 3</small><b>Launch · dashboard</b>Changes go live; past data is connected to the dashboard to set the baseline.</li>
+    <li><small>WEEK 4</small><b>First monthly review</b>Before vs after on the same basis, and next month's budget split.</li>
+  </ul>
 
   <h2 class="en-h" id="plans">Engagement</h2>
   <ul class="en-plans">
