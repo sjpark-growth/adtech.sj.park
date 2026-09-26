@@ -1832,3 +1832,17 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
   .svc-mini .mv { grid-column: 2; flex-direction: row; align-items: baseline; gap: 8px; text-align: left; }
   .svc-mini .mk b { white-space: normal; }
 }
+
+/* ===== (2026-09-26) 「너무 커졌다 — 조금만 줄여 줘」 — 최근 키운 서비스 · 진행 방식 구간 제목을 한 단계(≈15%) 되돌린다 ===== */
+.svc h3                  { font-size: clamp(23px, 2.1vw, 28px); }
+.svc-mini .mk b          { font-size: clamp(20px, 1.8vw, 23px); }
+.svc-tier b              { font-size: clamp(15px, 1.3vw, 17px); }
+.svc-tier span           { font-size: 14px; }
+.svcfit h3               { font-size: clamp(20px, 1.8vw, 23px); }
+.plan h3                 { font-size: clamp(19px, 1.7vw, 22px); }
+.proc h3, .onboard h4    { font-size: clamp(18px, 1.55vw, 20px); }
+.sub-h                   { font-size: clamp(21px, 1.9vw, 24px); }
+@media (max-width: 600px) {
+  .svc h3 { font-size: 21px; } .svc-mini .mk b { font-size: 19px; } .svcfit h3 { font-size: 19px; } .svc-tier b { font-size: 15px; }
+}
+@media print { .svc h3 { font-size: 16pt; } .svc-mini .mk b, .svcfit h3 { font-size: 13pt; } }
