@@ -1851,3 +1851,59 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 .svc-tier b     { font-size: clamp(13.5px, 1.17vw, 15px); }
 @media (max-width: 600px) { .svc-mini .mk b { font-size: 18px; } .svc-tier b { font-size: 14px; } }
 @media print { .svc-mini .mk b { font-size: 12pt; } .svc-tier b { font-size: 10.5pt; } }
+
+/* ===== (2026-09-27) PDF 분량 정리 — 빈 장 줄이기 · 첫 장에 소개와 성과 네 칸 =====
+   · 큰 구간마다 새 장에서 시작하던 것을 풀고 이어서 흘린다. 제목(구간 머리 · 카드 제목)은 줄 중간에서 끊지 않고 다음 내용과 붙여 둔다
+   · 첫 장: 사진 · 이름 · 제목 · 요약 줄 간격을 한 단계 줄이고, 성과 칸 차트는 인쇄하는 동안만 낮게 다시 그린다(app.js boardH)
+   · 사례 · 경력 카드는 한 장 가까이 커서 통째로 넘기면 반 장씩 빈다 → 카드 안 덩어리(제목 · 숫자 · 목록 한 줄) 사이에서만 나눈다.
+     카드 윗여백은 첫 줄의 안쪽 여백으로 옮긴다 — 카드 첫머리에서 나뉘어 빈 테두리만 남는 것을 막는다 */
+@media print {
+  h2, h3, h4, .sec-h, .growth-h { break-inside: avoid; }
+  .sec-h, .growth-h, .mb-h, .chart-title { break-after: avoid; }
+  #work, #pillars, #career, #contact { break-before: auto !important; }
+  .gantt { break-inside: avoid; }
+
+  .hero { padding-block: 0 4pt !important; }
+  .hero .shell { gap: 8pt !important; }
+  .portrait { width: 84px !important; }
+  .idrow h1 { margin-top: 4pt !important; }
+  .hero h1 { font-size: 32pt !important; }
+  .hero .kicker { margin: 8pt 0 -8pt !important; font-size: 10.5pt !important; }
+  .thesis { margin-top: 10pt !important; font-size: 18pt !important; }
+  .hero .contact { margin-top: 10pt !important; }
+  .herosum { margin-top: 6pt !important; row-gap: 1.5pt !important; }
+  .herosum span { line-height: 1.4 !important; }
+  .mboard-wrap, .mboard { gap: 6pt !important; }
+  .mp { padding: 8pt 10pt 7pt !important; }
+  .mp-big { margin-top: 2pt !important; }
+  .mp-big .to { font-size: 25pt !important; }
+  .mp-big .from { font-size: 13pt !important; }
+  .mp-sub { min-height: 0 !important; margin: 2pt 0 3pt !important; font-size: 8.8pt !important; }
+  .mp-key { margin-top: 2pt !important; }
+  .mp-span { margin-top: 3pt !important; font-size: 7.5pt !important; }
+  .mb-h h2 { font-size: 16pt !important; }
+
+  .proj { break-inside: auto !important; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .proj .proj-body { display: block !important; padding-top: 0 !important; }
+  .proj .proj-body > * + * { margin-top: 9pt; }
+  .proj .proj-meta { padding-top: 12pt; break-after: avoid; }
+  .proj h3 { break-after: avoid; }
+  .proj .hook, .proj .facts, .proj .how li { break-inside: avoid; }
+
+  .job { break-inside: auto !important; padding-top: 0 !important; }
+  .job > :first-child { padding-top: 14px; }
+  .job-side { break-inside: avoid; break-after: avoid; }
+  .job .jscale, .job-main .scope, .job-main li, .job-main .see { break-inside: avoid; }
+  .job-main h4 { break-after: avoid; }
+
+  .foot { padding-block: 6pt 0 !important; }
+}
+/* 이 판의 칸 — 첫 장 연락 버튼 두 개를 한 줄로 · 문의 안내 상자는 자르지 않는다 */
+@media print {
+  .hero .cta { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: none !important; margin-top: 10pt !important; gap: 6pt !important; }
+  .hero .cta-btn { padding: 5pt 8pt !important; border-radius: 10px !important; }
+  .hero .cta-ic { width: 24px !important; height: 24px !important; border-radius: 7px !important; }
+  .hero .cta-l b { font-size: 11.5pt !important; }
+  .hero .cta-note { margin-top: 0 !important; }
+  .askbox, .cta, .scale { break-inside: avoid; }
+}

@@ -244,6 +244,8 @@
     // 처음 한 번 + 보이는 동안 12초마다 다시 그린다
     const cards = $$('.mp', host);
     let rt = 0; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => cards.forEach(c => c._draw(false)), 120); });
+    addEventListener('beforeprint', () => { printing = true; cards.forEach(c => c._draw(false)); });
+    addEventListener('afterprint', () => { printing = false; cards.forEach(c => c._draw(false)); });
     addEventListener('load', () => setTimeout(() => cards.forEach(c => c._draw(false)), 60)); // 창 높이가 확정된 뒤 한 번 더
     /* (2026-09-26) 휴대폰에서는 네 칸을 옆으로 넘겨 본다(style.css) — 몇 번째 칸인지 점으로 알린다 */
     const dots = el('div', { class: 'mb-dots', 'aria-hidden': 'true' });
@@ -302,7 +304,9 @@
     });
   }
   // 첫 화면이 한 화면에 들어오도록 — 창 높이에 맞춰 차트 높이를 정한다 (넓은 화면 2열 배치일 때만)
-  const boardH = () => innerWidth > 1100 ? Math.max(80, Math.min(118, Math.round((innerHeight - 520) / 2))) : 110;
+  /* 인쇄 · PDF 에서는 카드가 종이 폭만큼 넓어져 차트도 같이 커진다 → 인쇄하는 동안만 폭 대비 낮게 다시 그려 첫 장에 네 칸이 모두 들어가게 (2026-09-26) */
+  let printing = false;
+  const boardH = W => printing ? Math.round(Math.max(64, Math.min(110, (W || 300) * 0.27))) : innerWidth > 1100 ? Math.max(80, Math.min(118, Math.round((innerHeight - 520) / 2))) : 110;
   const BOARD = {
     /* (2026-09-26) 매체 한 칸 = 그 매체의 개선 하나.
        line — 월별 ROAS 선(series.js 의 roas[b.series]). 운영 전 평균 점선 + b.mark 기간 평균 구간선
@@ -311,7 +315,7 @@
     line(box, b) {
       const key = b.series, vals = S.roas[key], col = b.color || 'var(--accent)';
       const before = S.periods.B.roas[key], mk = S.periods[b.mark || 'H1'], markV = mk.roas[key];
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(), m = { l: 2, r: 8, t: 10, b: 16 };
+      const W = Math.max(240, box.clientWidth || 360), H = boardH(W), m = { l: 2, r: 8, t: 10, b: 16 };
       const lo = Math.min(...vals, before) * 0.9, hi = Math.max(...vals, markV) * 1.04;
       const step = (W - m.l - m.r) / N, X = i => m.l + (i + .5) * step, Y = v => m.t + (1 - (v - lo) / (hi - lo)) * (H - m.t - m.b);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${b.title} 월별 ROAS` });
@@ -336,7 +340,7 @@
     },
     pair(box, b) {
       const rows = b.rows, col = b.color || 'var(--accent)';
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(), rowH = (H - 6) / rows.length;
+      const W = Math.max(240, box.clientWidth || 360), H = boardH(W), rowH = (H - 6) / rows.length;
       const lw = 58, vw = 58, bwMax = Math.max(60, W - lw - vw - 6);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${b.title} 개선 전후` });
       rows.forEach(([name, la, a, lb, v, unit, dec = 0], k) => {
@@ -356,7 +360,7 @@
     },
     bars(box, b) {
       const vals = b.values, col = b.color || 'var(--accent)', hot = b.hot || 4, base = b.base || 100;
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(), m = { l: 0, r: 0, t: 12, b: 16 };
+      const W = Math.max(240, box.clientWidth || 360), H = boardH(W), m = { l: 0, r: 0, t: 12, b: 16 };
       const n = vals.length, step = W / n, hi = Math.max(...vals) * 1.08, Y = v => m.t + (1 - v / hi) * (H - m.t - m.b);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${b.title} 월별` });
       const ry = Y(base); s('line', { x1: 0, x2: W, y1: ry, y2: ry, style: 'stroke:var(--before);stroke-dasharray:3 3' }, svg);
@@ -371,7 +375,7 @@
       box.replaceChildren(svg); return svg;
     },
     mix(box) {
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(), m = { l: 0, r: 0, t: 4, b: 16 };
+      const W = Math.max(240, box.clientWidth || 360), H = boardH(W), m = { l: 0, r: 0, t: 4, b: 16 };
       const step = (W - m.l - m.r) / N, bw = Math.max(3, step - 3);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '매체별 광고비 비중 월별' });
       const Y = p => m.t + (1 - p / 100) * (H - m.t - m.b);
@@ -404,7 +408,7 @@
       return svg;
     },
     brand(box) {
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(), m = { l: 0, r: 0, t: 8, b: 16 };
+      const W = Math.max(240, box.clientWidth || 360), H = boardH(W), m = { l: 0, r: 0, t: 8, b: 16 };
       const step = W / N, Y = v => m.t + (1 - v / 50) * (H - m.t - m.b);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '브랜드 키워드 의존도 월별' });
       s('rect', { x: 0, y: 0, width: step * tenureIdx, height: H - m.b, style: 'fill:var(--band-b)' }, svg);
@@ -423,7 +427,7 @@
       box.replaceChildren(svg); return svg;
     },
     roas(box) {
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(), m = { l: 2, r: 8, t: 10, b: 16 };
+      const W = Math.max(240, box.clientWidth || 360), H = boardH(W), m = { l: 2, r: 8, t: 10, b: 16 };
       const step = (W - m.l - m.r) / N, X = i => m.l + (i + .5) * step, Y = v => m.t + (1 - (v - 700) / 1000) * (H - m.t - m.b);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '통합 ROAS 월별' });
       s('rect', { x: 0, y: 0, width: m.l + step * tenureIdx, height: H - m.b, style: 'fill:var(--band-b)' }, svg);
@@ -447,7 +451,7 @@
     },
     multi(box) {
       // 한 줄 = 매체 | 개선 전 | 막대(점선 = 개선 전 크기) | 개선 후 | 개선 폭
-      const rows = R.boardMulti, W = Math.max(260, box.clientWidth || 360), rowH = Math.max(21, Math.min(27, Math.round(boardH() / 4.3))), H = rows.length * rowH + 16;
+      const rows = R.boardMulti, W = Math.max(260, box.clientWidth || 360), rowH = Math.max(21, Math.min(27, Math.round(boardH(W) / 4.3))), H = rows.length * rowH + 16;
       // 막대 길이 = 개선 배수(개선 후 ÷ 개선 전). 점선 칸 = 개선 전(1배). 최대 배수에 맞춰 자를 정한다
       const lw = 66, bw0 = 44, aw = 44, dw = 48, bx = lw + bw0, bwMax = Math.max(40, W - bx - aw - dw - 8), maxR = Math.max(...rows.map(r => r[2] / r[1])) * 1.08;
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '매체별 ROAS 개선 전후' });
