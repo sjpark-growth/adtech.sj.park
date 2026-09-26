@@ -1675,3 +1675,12 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
   .foot { padding-block: 6pt 0 !important; }
   .foot .shell { gap: 4pt 16pt !important; }
 }
+
+/* (2026-09-26) 첫 화면 오른쪽 「광고 성과」 보드 — 위에만 붙어 아래가 비던 것을, 왼쪽(사진 ~ 요약 다섯 줄) 높이만큼
+   카드를 키워 채운다. 카드 안 여유는 제목 · 숫자 · 설명 · 차트 사이에 고르게 나눈다(차트는 비율 고정이라 늘리지 않는다) */
+@media screen and (min-width: 1101px) {
+  .hero .shell { align-items: stretch; }
+  .hero .mboard-wrap { align-self: stretch; }
+  .hero .mboard { flex: 1 1 auto; grid-auto-rows: 1fr; }
+  .hero .mboard .mp { justify-content: space-between; }
+}
