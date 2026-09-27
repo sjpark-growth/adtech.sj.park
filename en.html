@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230c1a2b'/%3E%3Cpath d='M7 22 L13 15 L18 18 L25 9' fill='none' stroke='%238b9bff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <!-- 색 · 글꼴 토큰은 한국어판과 같은 파일에서 가져온다 (외부 요청 없음) -->
-<link rel="stylesheet" href="assets/style.css?v=202609272004">
+<link rel="stylesheet" href="assets/style.css?v=202609272006">
 <style>
   /* 영문 요약은 한 장짜리라 한국어판 레이아웃을 쓰지 않는다 — 토큰만 빌려 쓰고 배치는 여기서 한다 */
   body { background: var(--paper); color: var(--ink); font-family: var(--f-sans); line-height: 1.6; margin: 0; }
@@ -137,7 +137,7 @@
   <div class="en-top">
     <img class="en-photo" src="assets/profile.jpg" alt="Seongjoon Park" width="104" height="139">
     <div class="en-id">
-      <p class="en-eyebrow">Freelance performance marketer · Coupang · Naver · Meta · <span data-career>8 yrs 9 mos</span></p>
+      <p class="en-eyebrow">Freelance performance marketer · Coupang · Naver · Meta · <span data-career>8 yrs 10 mos</span></p>
       <h1>Seongjoon Park</h1>
       <p class="en-thesis">No wasted ad spend — and <em>ROAS pushed all the way</em>.</p>
       <p class="en-lede">I run ads for Korean e-commerce brands with <b>₩0.5B – ₩10B</b> in annual ad spend. Today I lead every external marketplace and run own-store ads hands-on for a brand spending <b>about ₩10B a year</b>. I operate <b>Coupang, Naver and Meta directly</b>, without agencies, and scale budget <b>only where efficiency is proven</b>. Hire me for one channel or all three.</p>
@@ -239,7 +239,7 @@
   </section>
 
   <section class="en-job">
-    <div><div class="co">Company C</div><div class="meta">May 2022 – Oct 2023 · Marketing Manager → Team Lead<br>Brands D · E (home fitness · yoga)</div></div>
+    <div><div class="co">Company C</div><div class="meta">May 2022 – Nov 2023 · Marketing Manager → Team Lead<br>Brands D · E (home fitness · yoga)</div></div>
     <ul>
       <li>Naver ROAS <strong>177% → 368%</strong>; Naver non-paid traffic <strong>+128%</strong>; Coupang consignment revenue <strong>+304%</strong>.</li>
       <li>Turned an operating loss of <strong>₩890M</strong> into a profit of about <strong>₩500M</strong>; RPA saved <strong>2,860 hours</strong> a year.</li>
@@ -305,7 +305,7 @@
     var cs = document.querySelector('[data-career]');
     if (cs) {
       var d = new Date(), now = d.getFullYear() * 12 + d.getMonth() + 1, n = 0;
-      [[2017, 3, 2020, 3], [2020, 7, 2022, 3], [2022, 5, 2023, 10], [2024, 5, 2025, 6], [2025, 7]].forEach(function (j) {
+      [[2017, 3, 2020, 3], [2020, 7, 2022, 3], [2022, 5, 2023, 11], [2024, 5, 2025, 6], [2025, 7]].forEach(function (j) {
         n += (j[2] ? j[2] * 12 + j[3] : now) - (j[0] * 12 + j[1]) + 1;
       });
       var y = Math.floor(n / 12), m = n % 12;
