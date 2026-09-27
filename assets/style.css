@@ -2098,3 +2098,8 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 /* (2026-09-27) 기간 비교 표 — 좁은 칸에서 숫자가 「1,42 / 6」처럼 두 줄로 쪼개지던 것 */
 .cmp td .num, .cmp td { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .cmp th:first-child, .cmp td:first-child { white-space: normal; }
+
+/* (2026-09-27) 문의 칸 메일 주소가 768px · 1101px 폭에서 「j1o2o1n7@naver.…」로 잘리던 것 —
+   칸 너비에 맞춰 글자를 줄이고(19 → 최소 15px), 그래도 모자라면 @ 앞에서 줄을 바꾼다(app.js 가 <wbr> 을 넣는다). 첫 화면 버튼은 그대로 */
+.contact-row .cta-l { container-type: inline-size; }   /* 글자 칸 너비 기준 — 주소 폭 ≈ 글자 크기 × 10.8 */
+.contact-row .cta.big .cta-l b { font-size: clamp(15px, calc(100cqi / 11), 19px); white-space: normal; overflow: visible; text-overflow: clip; }

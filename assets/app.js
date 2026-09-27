@@ -196,7 +196,7 @@
     const ctaHTML = `
       <button class="cta-btn is-mail" type="button" data-copy="${P.email}" data-toast="메일 주소를 복사했어요 — 받는 사람 칸에 붙여 넣어 주세요">
         <span class="cta-ic">${ICON.mail}</span>
-        <span class="cta-l"><small>메일 · 누르면 주소 복사</small><b>${P.email}</b></span>
+        <span class="cta-l"><small>메일 · 누르면 주소 복사</small><b>${P.email.replace('@', '<wbr>@')}</b></span>
         <span class="cta-act">${ICON.copy}<em>복사</em></span>
       </button>
       <a class="cta-btn is-tel" href="tel:${P.phone.replace(/-/g, '')}" data-tel="${P.phone}">
