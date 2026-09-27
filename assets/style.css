@@ -2062,3 +2062,9 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
   .hero-r .mp-shot { aspect-ratio: 16 / 6.2; }
   .mp-group.g-live { color: #c52f35 !important; }
 }
+
+/* (2026-09-27) 「광고 성과」 구간 오른쪽 「비교 기준」 상자 — 아래 「그 밖의 광고 개선」과 같은 제목 크기, 항목 이름 칸은 한 줄로 */
+.summary .basis .hk-h { font-size: 17px; }
+.summary .basis .nowbox { margin: 0 0 16px; }
+.summary .basis .nowbox dt { white-space: nowrap; }
+@media print { .summary .basis { break-inside: avoid; } .summary .basis .hk-h { font-size: 12pt; } }
