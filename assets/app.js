@@ -374,7 +374,7 @@
     pair(box, b) {
       const rows = b.rows, col = b.color || 'var(--accent)';
       const W = Math.max(240, box.clientWidth || 360), H = boardH(box), rowH = (H - 6) / rows.length;
-      const lw = 58, vw = 58, bwMax = Math.max(60, W - lw - vw - 6);
+      const lw = 66, vw = 58, bwMax = Math.max(60, W - lw - vw - 6);   // lw — 「월 전환매출」 이름이 막대에 겹치지 않는 폭
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${b.title} 개선 전후` });
       rows.forEach(([name, la, a, lb, v, unit, dec = 0], k) => {
         const y0 = 3 + k * rowH, bh = Math.max(9, Math.min(16, rowH / 2 - 7)), max = Math.max(a, v) * 1.02;

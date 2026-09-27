@@ -2094,3 +2094,7 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 .sumpts span small { display: block; margin-top: 1px; font-size: 12.5px; line-height: 1.4; color: var(--ink-3); }
 @media print { .sumpts span small { font-size: 8pt; } }
 .summary .lede b { white-space: nowrap; }
+
+/* (2026-09-27) 기간 비교 표 — 좁은 칸에서 숫자가 「1,42 / 6」처럼 두 줄로 쪼개지던 것 */
+.cmp td .num, .cmp td { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cmp th:first-child, .cmp td:first-child { white-space: normal; }
