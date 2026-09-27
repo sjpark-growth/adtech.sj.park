@@ -2098,3 +2098,7 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 /* (2026-09-27) 기간 비교 표 — 좁은 칸에서 숫자가 「1,42 / 6」처럼 두 줄로 쪼개지던 것 */
 .cmp td .num, .cmp td { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .cmp th:first-child, .cmp td:first-child { white-space: normal; }
+
+/* (2026-09-27) 대시보드 칸 — 그림 위 빨간 「숫자는 모두 임의 값」 표시는 뺐다(아래 줄에 같은 안내가 있다).
+   PDF 에서는 차트 칸 아래 줄을 숨기는데, 대시보드 칸만은 그 안내가 남도록 보인다(「영상으로 보기」 링크는 숨김 그대로) */
+@media print { .hero-r .mp-dash .mp-span { display: flex !important; margin-top: 3pt; font-size: 8pt; } }

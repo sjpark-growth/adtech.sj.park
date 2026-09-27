@@ -245,7 +245,6 @@
           <p class="mp-sub">${b.sub}</p>
           <button class="mp-shot" type="button" aria-label="퍼포먼스 데이터 대시보드 데모 크게 열기 — 직접 조작">
             <img src="${b.poster}" alt="" width="640" height="360" decoding="async">
-            <span class="mp-badge">숫자는 모두 임의 값</span>
             <span class="mp-open">${ICON.expand}클릭해서 직접 조작</span>
           </button>
           <p class="mp-span">${b.span || ''}<a href="#dash">영상으로 보기 ↓</a></p>`;
