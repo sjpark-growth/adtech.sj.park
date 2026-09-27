@@ -88,7 +88,12 @@
         <div class="cta" id="heroContact"></div>
         <ul class="herosum" id="heroSum"></ul>
       </div>
-      <div class="mboard-wrap"><div class="mb-h"><h2 id="mbTitle">광고 성과</h2><span>A사 · 연 매출 1,400억 브랜드 · 운영 <span data-auto="tenure">14개월</span> · 26.9 기준</span></div><div class="mboard" id="mboard" aria-labelledby="mbTitle"></div></div>
+      <!-- 오른쪽 = 성과 리포트: 위는 대시보드 + 차트 세 칸, 아래는 핵심 성과 (3분할) -->
+      <div class="mboard-wrap hero-r">
+        <div class="mb-h"><h2 id="mbTitle">성과 리포트</h2><span>A사 · 연 매출 1,400억 브랜드 · 운영 <span data-auto="tenure">14개월</span> · 26.9 기준</span><a class="mb-more" href="#perf">상세 리포트 ↓</a></div>
+        <div class="mboard" id="mboard" aria-labelledby="mbTitle"></div>
+        <div class="hkey"><h3 class="hkey-h" id="hkeyH">핵심 성과</h3><ul class="hk" id="kpis" aria-labelledby="hkeyH"></ul></div>
+      </div>
     </div>
   </section>
 
@@ -98,10 +103,9 @@
       <div class="sum-l">
         <h2 class="hk-h" id="sum-h">광고 성과 — 운영 전과 비교 <span>A사 · 운영 <span data-auto="tenure">14개월</span></span></h2>
         <p class="lede" id="h-lede"></p>
-        <dl class="nowbox" id="h-now"></dl>
       </div>
       <div class="sum-r">
-        <ul class="hk" id="kpis"></ul>
+        <dl class="nowbox" id="h-now"></dl>
         <div class="more"><h2 class="hk-h">그 밖의 광고 개선</h2><ul id="moreWins"></ul></div>
       </div>
     </div>
