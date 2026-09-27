@@ -174,6 +174,7 @@
     if (A.kicker) R.profile.kicker = A.kicker;
     if (A.thesis) R.profile.thesis = A.thesis;
     if (A.lede) R.profile.lede = A.lede;
+    if (A.points) R.profile.points = A.points;
     if (A.first && Array.isArray(R.profile.highlights)) {
       const i = R.profile.highlights.findIndex(h => h[0] === A.first);
       if (i > 0) R.profile.highlights.unshift(R.profile.highlights.splice(i, 1)[0]);
@@ -213,6 +214,8 @@
     $('#contact-lede').innerHTML = `${P.role} · ${P.career}. <b>메일이 가장 빠릅니다</b> — 아래 버튼을 누르면 주소가 복사됩니다.`;
     // 요약 띠
     $('#h-lede').innerHTML = P.lede;
+    // 한 줄 요약 아래 포인트 — [항목, 전 → 후 · 기준]
+    $('#h-pts').innerHTML = (P.points || []).map(([k, v]) => `<li><b class="sp-k">${k}</b><span>${v}</span></li>`).join('');
     $('#h-now').innerHTML = P.now.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
     /* 핵심 성과 — 바로 위 차트 칸에 큰 숫자로 이미 나온 지표(board)는 빼고, 앞에서부터 네 칸 */
     const onBoard = new Set(R.board.filter(b => !b.off).map(b => b.id));

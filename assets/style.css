@@ -2068,3 +2068,29 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 .summary .basis .nowbox { margin: 0 0 16px; }
 .summary .basis .nowbox dt { white-space: nowrap; }
 @media print { .summary .basis { break-inside: avoid; } .summary .basis .hk-h { font-size: 12pt; } }
+
+/* (2026-09-27) 「광고 성과」 — 한 줄 요약 + 포인트 목록(항목 | 전 → 후 · 기준). 문장 대신 숫자가 먼저 읽히게 */
+.summary .lede { font-size: 17px; line-height: 1.55; color: var(--ink); font-weight: 600; letter-spacing: -0.02em; }
+.summary .lede b { color: var(--accent-ink); font-weight: 800; }
+.sumpts { list-style: none; margin: 16px 0 0; padding: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); border-top: 1px solid var(--rule); }
+.sumpts li { display: contents; }
+.sumpts .sp-k, .sumpts span { padding: 10px 0; border-bottom: 1px solid var(--rule); }
+.sumpts .sp-k { padding-right: 18px; font-size: 13.5px; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
+.sumpts span { font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.sumpts span b { color: var(--ink); font-weight: 800; font-variant-numeric: tabular-nums; }
+.sumpts:empty { display: none; }
+@media (max-width: 600px) {
+  .sumpts { grid-template-columns: minmax(0, 1fr); }
+  .sumpts .sp-k { padding: 10px 0 0; border-bottom: 0; }
+  .sumpts span { padding-top: 2px; }
+}
+@media print {
+  .summary .lede { font-size: 11.5pt; }
+  .sumpts { margin-top: 8pt; break-inside: avoid; }
+  .sumpts .sp-k, .sumpts span { padding: 5pt 0; }
+  .sumpts .sp-k { font-size: 9pt; padding-right: 12pt; }
+  .sumpts span { font-size: 10pt; }
+}
+.sumpts span small { display: block; margin-top: 1px; font-size: 12.5px; line-height: 1.4; color: var(--ink-3); }
+@media print { .sumpts span small { font-size: 8pt; } }
+.summary .lede b { white-space: nowrap; }
