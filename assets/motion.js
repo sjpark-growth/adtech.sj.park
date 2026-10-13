@@ -641,7 +641,7 @@
       g.alpha(1 - seg(t, 5.2, 5.7), () => {
         g.box(64, 110, 440, 440, { fill: C.panel, r: 14, stroke: C.line });
         g.text('제외 키워드', 92, 150, { size: 20, weight: 700 });
-        const kws = ['A브랜드', 'A브랜드 소스', 'A브랜드 B제품', 'A브랜드', 'A브랜드 주력 품목', 'A브랜드 주력 품목'];
+        const kws = ['A브랜드', 'A브랜드 제품', 'A브랜드 B제품', 'A브랜드', 'A브랜드 주력 품목', 'A브랜드 주력 품목'];
         const filled = Math.floor(seg(t, 0.6, 3.6) * kws.length + 0.001);
         g.text(`${Math.min(20, 14 + filled)}/20`, 476, 150, { size: 18, color: C.ink2, align: 'right', font: 'num' });
         kws.forEach((k, i) => {
@@ -690,7 +690,7 @@
       g.alpha(1 - seg(t, 4.6, 5.1), () => {
         g.box(64, 110, 520, 450, { fill: C.panel, r: 14, stroke: C.line });
         g.box(88, 130, 472, 40, { fill: 'rgba(255,255,255,.06)', r: 20 }); g.text('🔍  주력 품목', 108, 157, { size: 17, color: C.ink2 });
-        const items = ['A사 주력 품목 30팩', '우리 상품 · A브랜드 소스', 'B사 다이어트 간식', '우리 상품 · B제품', 'C사 주력 품목', 'D사 주력 품목 세트', '우리 상품 · D제품'];
+        const items = ['A사 주력 품목 30팩', '우리 상품 · A브랜드 제품', 'B사 다이어트 간식', '우리 상품 · B제품', 'C사 주력 품목', 'D사 주력 품목 세트', '우리 상품 · D제품'];
         const scan = seg(t, 0.6, 3.6) * items.length;
         items.forEach((s, i) => {
           const y = 190 + i * 50, mine = s.startsWith('우리');
@@ -704,7 +704,7 @@
         // 표
         g.box(620, 110, 596, 450, { fill: C.panel, r: 14, stroke: C.line });
         ['키워드', '상품', '순위', '전일'].forEach((h, k) => g.text(h, [648, 790, 1020, 1110][k], 150, { size: 15, color: C.ink3, weight: 600 }));
-        const rows = [['주력 품목', 'A브랜드 소스', 2, '▲1', C.good], ['주력 품목', 'B제품', 4, '—', C.ink3], ['주력 품목', 'D제품', 7, '▼3', C.bad], ['주력 품목 세트', 'L제품', 3, '▲2', C.good], ['단백질 간식', 'G제품', 11, '▼1', C.bad]];
+        const rows = [['주력 품목', 'A브랜드 제품', 2, '▲1', C.good], ['주력 품목', 'B제품', 4, '—', C.ink3], ['주력 품목', 'D제품', 7, '▼3', C.bad], ['주력 품목 세트', 'L제품', 3, '▲2', C.good], ['단백질 간식', 'G제품', 11, '▼1', C.bad]];
         rows.forEach(([a, b, r, d, col], i) => {
           const p = seg(t, 1.2 + i * 0.5, 1.6 + i * 0.5); const y = 176 + i * 58;
           g.alpha(E.out(p), () => {
@@ -774,7 +774,7 @@
         g.box(64, 210, 760, 330, { fill: C.panel, r: 16, stroke: C.line });
         g.pill('AI 브리핑', 90, 232, { size: 13, fill: 'rgba(139,155,255,.16)', color: C.accent });
         g.text('다이어트·단백질 보충용으로 많이 찾는 제품이에요.', 90, 300, { size: 18, color: C.ink2 });
-        const recs = ['A브랜드 A브랜드 소스', 'A사 주력 품목', 'B사 다이어트 간식'];
+        const recs = ['A브랜드 A브랜드 제품', 'A사 주력 품목', 'B사 다이어트 간식'];
         recs.forEach((r, i) => {
           const p = E.out(seg(t, 4.2 + i * 0.5, 4.8 + i * 0.5)); const y = 326 + i * 66;
           g.alpha(p, () => {
