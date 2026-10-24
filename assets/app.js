@@ -445,8 +445,8 @@
       const step = W / N, Y = v => m.t + (1 - v / 50) * (H - m.t - m.b);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '브랜드 키워드 의존도 월별' });
       s('rect', { x: 0, y: 0, width: step * tenureIdx, height: H - m.b, style: 'fill:var(--band-b)' }, svg);
-      const ry = Y(37.9); s('line', { x1: 0, x2: W, y1: ry, y2: ry, style: 'stroke:var(--before);stroke-dasharray:3 3' }, svg);
-      txt(svg, W - 4, ry - 4, '운영 전 평균 37.9%', 'tick', 'end');
+      const ry = Y(38.0); s('line', { x1: 0, x2: W, y1: ry, y2: ry, style: 'stroke:var(--before);stroke-dasharray:3 3' }, svg);
+      txt(svg, W - 4, ry - 4, '운영 전 평균 38.0%', 'tick', 'end');
       S.brand.total.forEach((v, i) => {
         const x = i * step + 1.5, bw = Math.max(2, step - 3), yy = Y(v), after = i >= tenureIdx, f = after ? (i - tenureIdx) / (N - 1 - tenureIdx) : 0;
         s('rect', { x, y: yy, width: bw, height: (H - m.b) - yy, rx: 2, class: after ? 'gb' : 'gb0', 'data-k': i - tenureIdx, 'data-i': i, style: after ? `fill:var(--accent);opacity:${(.45 + .55 * f).toFixed(2)}` : 'fill:var(--before);opacity:.55' }, svg);
@@ -456,7 +456,7 @@
       const lv = S.brand.total[lastIdx];
       txt(svg, W - 1, Y(lv) - 6, `${nf(lv, 1)}%`, 'dlab', 'end', 'font-size:12.5px;fill:var(--accent-ink)');
       txt(svg, 0, H - 3, '25.1', 'tick'); txt(svg, tx, H - 3, '운영', 'tick strong', 'middle', 'fill:var(--accent-ink)'); txt(svg, W, H - 3, '26.9', 'tick', 'end');
-      boardHover(svg, W, H, 0, step, 'rect[data-i]', i => `<div class="t">${ymTitle(i)}</div><div class="r"><span>브랜드 키워드 의존도</span><b>${nf(S.brand.total[i], 1)}%</b></div><div class="f">운영 전 평균 37.9%</div>`, { get: i => S.brand.total[i], y: i => Y(S.brand.total[i]), fmt: v => `${nf(v, 1)}%` });
+      boardHover(svg, W, H, 0, step, 'rect[data-i]', i => `<div class="t">${ymTitle(i)}</div><div class="r"><span>브랜드 키워드 의존도</span><b>${nf(S.brand.total[i], 1)}%</b></div><div class="f">운영 전 평균 38.0%</div>`, { get: i => S.brand.total[i], y: i => Y(S.brand.total[i]), fmt: v => `${nf(v, 1)}%` });
       box.replaceChildren(svg); return svg;
     },
     roas(box) {
@@ -464,8 +464,8 @@
       const step = (W - m.l - m.r) / N, X = i => m.l + (i + .5) * step, Y = v => m.t + (1 - (v - 700) / 1000) * (H - m.t - m.b);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '통합 ROAS 월별' });
       s('rect', { x: 0, y: 0, width: m.l + step * tenureIdx, height: H - m.b, style: 'fill:var(--band-b)' }, svg);
-      const ry = Y(964); s('line', { x1: 0, x2: W, y1: ry, y2: ry, style: 'stroke:var(--before);stroke-dasharray:3 3' }, svg);
-      txt(svg, W - 4, ry + 13, '운영 전 평균 964%', 'tick', 'end');
+      const ry = Y(962); s('line', { x1: 0, x2: W, y1: ry, y2: ry, style: 'stroke:var(--before);stroke-dasharray:3 3' }, svg);
+      txt(svg, W - 4, ry + 13, '운영 전 평균 962%', 'tick', 'end');
       const pts = S.roas.total.map((v, i) => [X(i), Y(v)]);
       s('path', { d: pathD(pts.slice(tenureIdx)) + ` L ${X(lastIdx)} ${H - m.b} L ${X(tenureIdx)} ${H - m.b} Z`, class: 'ar', style: 'fill:var(--accent);opacity:.1' }, svg);
       s('path', { d: pathD(pts.slice(0, tenureIdx + 1)), style: 'fill:none;stroke:var(--before);stroke-width:2;stroke-linejoin:round' }, svg);
@@ -479,7 +479,7 @@
       txt(svg, X(lastIdx) - 2, Y(S.roas.total[lastIdx]) + 16, `26.9 ${nf(S.roas.total[lastIdx], 0)}%`, 'tick', 'end', 'font-size:10px');
       const tx = m.l + step * tenureIdx; s('line', { x1: tx, x2: tx, y1: 0, y2: H - m.b, style: 'stroke:var(--accent);stroke-width:1.5' }, svg);
       txt(svg, 0, H - 3, '25.1', 'tick'); txt(svg, tx, H - 3, '운영', 'tick strong', 'middle', 'fill:var(--accent-ink)'); txt(svg, W, H - 3, '26.9', 'tick', 'end');
-      boardHover(svg, W, H, m.l, step, null, i => `<div class="t">${ymTitle(i)}</div><div class="r"><span>통합 ROAS</span><b>${nf(S.roas.total[i], 0)}%</b></div><div class="f">운영 전 평균 964% 대비 ${S.roas.total[i] >= 964 ? '+' : ''}${nf(S.roas.total[i] - 964, 0)}%p</div>`, { get: i => S.roas.total[i], y: i => Y(S.roas.total[i]), fmt: v => `${nf(v, 0)}%`, dot: true });
+      boardHover(svg, W, H, m.l, step, null, i => `<div class="t">${ymTitle(i)}</div><div class="r"><span>통합 ROAS</span><b>${nf(S.roas.total[i], 0)}%</b></div><div class="f">운영 전 평균 962% 대비 ${S.roas.total[i] >= 962 ? '+' : ''}${nf(S.roas.total[i] - 962, 0)}%p</div>`, { get: i => S.roas.total[i], y: i => Y(S.roas.total[i]), fmt: v => `${nf(v, 0)}%`, dot: true });
       box.replaceChildren(svg); return svg;
     },
     multi(box) {
@@ -653,14 +653,14 @@
         { id: 'nv', name: '네이버 합계', color: 'var(--c-nv)', values: S.roas.naver },
       ],
       ref: { v: 1635, label: '1P 운영 전 최고 1,635%' },
-      caption: '쿠팡 1P 는 <b>25년 12월부터 10개월 연속 운영 전 최고치(1,635%) 위</b>. 윙은 25년 9월 이후 운영 전 저점(474%)을 다시 밟지 않았고,<br>네이버는 합계보다 <b>GFA 가 304% → 586%</b>로 가장 크게 올랐습니다(첫 화면 참고).',
+      caption: '쿠팡 1P 는 <b>25년 12월부터 10개월 연속 운영 전 최고치(1,635%) 위</b>. 윙은 25년 9월 이후 운영 전 저점(474%)을 다시 밟지 않았고,<br>네이버는 합계보다 <b>GFA 가 304% → 623%</b>로 가장 크게 올랐습니다(첫 화면 참고).',
       cmp: { cols: [['통합', p => p.roas.total], ['1P', p => p.roas.cp1], ['윙', p => p.roas.cp3], ['네이버', p => p.roas.naver]], dec: 0, suffix: '', note: '순수 ROAS %' } },
     { id: 'roas', label: '통합 ROAS', title: '통합 ROAS', unit: '9개 매체 · 광고비 가중 · 순수 ROAS %',
-      type: 'line', min: 700, max: 1700, ref: { v: 964, label: '운영 전 평균 964%' }, dec: 0, suffix: '%',
+      type: 'line', min: 700, max: 1700, ref: { v: 962, label: '운영 전 평균 962%' }, dec: 0, suffix: '%',
       series: [{ id: 'total', name: '통합 ROAS', color: 'var(--accent)', values: S.roas.total, emph: true }],
-      caption: '진단 구간(25.7–8)의 저점을 지난 뒤 <b>25년 9월부터 13개월 연속 운영 전 평균(964%) 위</b>. 26년 1월 1,556%로 최고치를 찍었고, 월 광고비를 운영 전의 1.9배로 늘린 확장 구간에서도 1,090% 이상을 지켰습니다.',
+      caption: '진단 구간(25.7–8)의 저점을 지난 뒤 <b>25년 9월부터 13개월 연속 운영 전 평균(962%) 위</b>. 26년 1월 1,556%로 최고치를 찍었고, 월 광고비를 운영 전의 1.9배로 늘린 확장 구간에서도 1,090% 이상을 지켰습니다.',
       cmp: { cols: [['ROAS', p => p.roas.total]], dec: 0, suffix: '%', note: '순수 ROAS · 광고비 가중', deltaCol: 0, deltaUnit: '%p' } },
-    { id: 'amount', label: '광고비와 매출', title: '월 광고비와 월 전환매출 (억 원)', unit: '9개 매체 합계 · 수수료 · VAT 반영 전 · 26.9는 1~9일을 30일로 환산', type: 'duo',
+    { id: 'amount', label: '광고비와 매출', title: '월 광고비와 월 전환매출 (억 원)', unit: '9개 매체 합계 · 수수료 · VAT 반영 전 · 26.9는 9월 전체', type: 'duo',
       series: [
         { id: 'rev', name: '월 전환매출', color: 'var(--accent)', values: R.amount.revenue, emph: true },
         { id: 'spend', name: '월 광고비', color: 'var(--ink-3)', values: R.amount.spend },
