@@ -1349,14 +1349,46 @@
       e.preventDefault(); scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
       try { history.replaceState(null, '', '#top'); } catch (err) {}
     });
+    let lastC = -2;
     const spy = () => {
       const max = document.documentElement.scrollHeight - innerHeight;
       mast.style.setProperty('--p', max > 0 ? (scrollY / max).toFixed(4) : 0);
       const y = scrollY + 120; let c = -1;
       secs.forEach((sec, i) => { if (sec && sec.offsetTop <= y) c = i; });
       links.forEach((a, i) => a.setAttribute('aria-current', String(i === c)));
+      // 휴대폰 메뉴는 옆으로 넘치므로, 지금 구간의 탭이 메뉴 가운데에 보이게 밀어 준다(2026-10-26 · 웹 이력서 본판과 같음 · PC 는 넘치지 않아 그대로)
+      if (c !== lastC) {
+        lastC = c;
+        const a = links[c], nav = a && a.parentElement;
+        if (a && innerWidth <= 620 && nav.scrollWidth > nav.clientWidth + 1) nav.scrollTo({ left: nav.scrollLeft + a.getBoundingClientRect().left - nav.getBoundingClientRect().left - (nav.clientWidth - a.offsetWidth) / 2, behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
     };
     addEventListener('scroll', spy, { passive: true }); spy();
+    // 휴대폰 메뉴 줄 양 끝 흐림 — 왼쪽으로 넘겼으면 왼쪽 끝도, 끝까지 넘겼으면 오른쪽은 흐리지 않는다(style.css .nav-l · .nav-end, 2026-10-26)
+    const nav = $('.mast nav');
+    const edge = () => { const max = nav.scrollWidth - nav.clientWidth; nav.classList.toggle('nav-l', nav.scrollLeft > 4); nav.classList.toggle('nav-end', nav.scrollLeft >= max - 4); };
+    nav.addEventListener('scroll', edge, { passive: true }); addEventListener('resize', edge); edge();
+  }
+
+  /* ------------------------------------------------------------ 카드 머리 줄 구분점 (2026-10-26 · 웹 이력서 본판과 같음)
+     좁은 화면에서 proj-meta 가 꺾이면 줄 끝이나 줄 머리에 「·」 만 남던 것 — 그 점만 숨긴다.
+     창 폭 · 글꼴이 바뀌면 다시 보고, 인쇄할 때는 모두 되살린다(인쇄 폭은 화면과 달라서) */
+  function tidyMeta() {
+    const seps = $$('.proj-meta > span[aria-hidden="true"]');
+    seps.forEach(s => { s.style.display = ''; s.style.visibility = ''; });
+    seps.forEach(s => {
+      const p = s.previousElementSibling, n = s.nextElementSibling;
+      if (p && s.offsetTop > p.offsetTop + 6) s.style.display = 'none';
+      else if (n && n.offsetTop > s.offsetTop + 6) s.style.visibility = 'hidden';
+    });
+  }
+  function wireMeta() {
+    let raf = 0;
+    const again = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(tidyMeta); };
+    tidyMeta(); addEventListener('resize', again);
+    document.fonts?.ready.then(again);
+    addEventListener('beforeprint', () => $$('.proj-meta > span[aria-hidden="true"]').forEach(s => { s.style.display = ''; s.style.visibility = ''; }));
+    addEventListener('afterprint', again);
   }
 
   /* ------------------------------------------------------------ 떠 있는 연락 버튼 */
@@ -1395,6 +1427,7 @@
   wireChrome();
   wireDock();
   wireAnimBudget();
+  wireMeta();
   onFirstView($('#kpis'), () => setTimeout(() => rollNumbers($('#kpis')), reduceMotion ? 0 : 200), 0.2);
   onFirstView($('#perfChart'), () => drawPerf(true), 0.2);
 })();

@@ -2103,3 +2103,18 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
    칸 너비에 맞춰 글자를 줄이고(19 → 최소 15px), 그래도 모자라면 @ 앞에서 줄을 바꾼다(app.js 가 <wbr> 을 넣는다). 첫 화면 버튼은 그대로 */
 .contact-row .cta-l { container-type: inline-size; }   /* 글자 칸 너비 기준 — 주소 폭 ≈ 글자 크기 × 10.8 */
 .contact-row .cta.big .cta-l b { font-size: clamp(15px, calc(100cqi / 11), 19px); white-space: normal; overflow: visible; text-overflow: clip; }
+
+/* =========================================================================
+   (2026-10-26) 시각 다듬기 — 휴대폰에서 들쭉날쭉하던 곳 정리(웹 이력서 본판과 같음). PC 배치 · 인쇄는 그대로
+   ========================================================================= */
+/* 절 머리표 「CAREER · 8년 10개월」 — inline-flex 라 안쪽 자동 기간 앞 띄어쓰기가 사라져 「·8년」으로 붙던 것 */
+.sec-h .tag > [data-auto]::before { content: " "; white-space: pre; }
+/* 휴대폰 메뉴 줄 — 왼쪽으로 넘긴 뒤엔 왼쪽 끝도 흐리게(잘린 탭이 칼로 자른 듯 보이던 것), 끝까지 넘기면 오른쪽 흐림을 뺀다.
+   app.js wireChrome 이 .nav-l(왼쪽에 가려진 탭 있음) · .nav-end(오른쪽 끝) 를 단다 */
+@media screen and (max-width: 600px) {
+  .mast nav.nav-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px, #000 86%, transparent); mask-image: linear-gradient(90deg, transparent, #000 28px, #000 86%, transparent); }
+  .mast nav.nav-end { -webkit-mask-image: none; mask-image: none; }
+  .mast nav.nav-l.nav-end { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px); mask-image: linear-gradient(90deg, transparent, #000 28px); }
+}
+/* 요약 첫 문장 굵은 구절은 한 덩어리로 두되(nowrap), 아주 좁은 휴대폰(359px 이하 — 320 폭)에서는 칸(288px)보다 길어 가로로 20px 넘치던 것 → 그 폭에서만 줄바꿈 허용 */
+@media screen and (max-width: 359px) { .summary .lede b { white-space: normal; } }
