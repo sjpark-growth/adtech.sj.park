@@ -2118,3 +2118,174 @@ a.sc-row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, var(--su
 }
 /* 요약 첫 문장 굵은 구절은 한 덩어리로 두되(nowrap), 아주 좁은 휴대폰(359px 이하 — 320 폭)에서는 칸(288px)보다 길어 가로로 20px 넘치던 것 → 그 폭에서만 줄바꿈 허용 */
 @media screen and (max-width: 359px) { .summary .lede b { white-space: normal; } }
+
+/* =========================================================================
+   (2026-11-05) PDF 쪽 맞춤 보강 — 반쯤 빈 장 · 쪽 끝에 홀로 남는 제목 · 빈 테두리 조각 줄이기
+   헤드리스 A4 실측: 전체 19 → 18장 · 요약 13 → 12장, 마지막 장을 뺀 모든 장이 70% 이상 채워짐(예전엔 50%대 장이 3장씩)
+   · 성과 차트는 인쇄 때 낮게 다시 그리고(app.js PRINT_H) 기간 비교 표를 조밀하게 — 둘이 한 쪽에
+   · 서비스 「PERFORMANCE · ALSO」 띠가 쪽 끝에 홀로 남던 것 — 격자를 블록 흐름으로 바꿔야 break-after: avoid 가 먹는다
+   · 키 큰 카드(서비스 · 역량 · 경력, 쪽의 40% 안팎)는 사례 카드처럼 카드 안 덩어리 사이에서만 나누고, 나뉜 조각마다 테두리를 닫는다.
+     Chrome 은 격자 칸 안의 break-after: avoid 를 무시해(역량 카드 꼬리표만 쪽 끝에 남았다), 붙여 둘 머리는 app.js 가
+     .svc-head · .phead 로 감싸 break-inside: avoid 로 지킨다(화면에서는 display: contents 라 배치 그대로)
+   · 경력 카드는 인쇄에서 블록 흐름 — 격자일 때 쪽 끝에서 카드 첫머리 앞이 잘려 빈 테두리만 남았다
+   · 문의: 연락 버튼 · 안내 상자는 한 덩어리, 의뢰 안내는 두 단으로 조밀하게(한 줄 목록이라 쪽의 55% — 늘 다음 장으로 밀렸다), 꼬리말은 혼자 한 장을 차지하지 않게
+   ========================================================================= */
+@media screen { .phead, .svc-head { display: contents; } }
+@media print {
+  /* 성과 — 차트 아래 기간 비교 표 */
+  .perf { gap: 8pt !important; }
+  .perf .panel { padding: 10pt 12pt !important; }
+  .chart-title { margin-bottom: 2pt !important; }
+  .legend { margin-top: 4pt !important; }
+  .caption { margin-top: 5pt !important; font-size: 9.5pt !important; }
+  .cmp h3 { margin: 0 0 4pt !important; font-size: 12pt !important; }
+  .cmp th, .cmp td { padding: 3pt 4pt !important; }
+  .cmp td .num { font-size: 12.5pt !important; }
+  .cmp .note { margin-top: 4pt !important; padding-top: 0 !important; font-size: 8.5pt !important; }
+
+  /* 넓은 사례 카드(네이버) — 숫자 세 칸을 한 줄에(세로로 쌓으면 카드가 쪽의 54%) */
+  .projects .proj.wide .facts { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+
+  /* 서비스 — 띠는 다음 카드와 붙이고, 카드는 머리 · 목록 한 줄 · 숫자 사이에서만 나눈다 */
+  .svcwrap { display: block !important; }
+  .svcwrap > * + * { margin-top: 8pt; }
+  .svc-tier { break-inside: avoid; break-after: avoid; }
+  .svc { display: block !important; break-inside: auto !important; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .svc > * + *, .svc-head > * + * { margin-top: 7pt; }
+  .svc-head { display: block; break-inside: avoid; break-after: avoid; }
+  .svc ul li:first-child { break-after: avoid; }
+  .svc ul li, .svc-proof { break-inside: avoid; }
+
+  /* 경력 카드 — 블록 흐름 + 나뉜 조각마다 테두리 */
+  .jobs, .job { display: block !important; }
+  .jobs > .job + .job { margin-top: 10pt; }
+  .job { -webkit-box-decoration-break: clone; box-decoration-break: clone; padding-top: 10pt !important; }
+  .job > :first-child { padding-top: 0 !important; }
+  .job > .job-main { margin-top: 10pt; }
+  .job .jscale { break-after: avoid; }   /* 회사 · 기간 · 규모 칩만 쪽 끝에 남고 한 줄 요약부터 다음 쪽이던 것(요약 PDF 검토) */
+
+  /* 역량 카드 — 제목 묶음(꼬리표 · 제목 · 설명)과 숫자 묶음(숫자 · 사례) 사이에서만 나눈다 */
+  .pillar { display: block !important; break-inside: auto !important; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .pillar > * + *, .phead > * + * { margin-top: 7pt; }
+  .phead { display: block; break-inside: avoid; }
+  .pillar .proof { break-inside: avoid; }
+  .pillar .ev { break-before: avoid; }
+
+  /* 문의 · 의뢰 안내 · 꼬리말 */
+  .contact-row { break-inside: avoid; }
+  .cta-note { break-before: avoid; }
+  #contact .factgrid { grid-template-columns: minmax(0, 2.3fr) minmax(0, 1fr) !important; }
+  #contact .factgrid > section:first-child dl { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 6pt 14pt !important; }
+  .factgrid section { padding: 9pt 11pt !important; }
+  .factgrid h3 { margin: 0 0 5pt !important; }
+  .factgrid dl { gap: 4pt 14pt !important; }
+  .factgrid dt { font-size: 9.5pt !important; }
+  .factgrid dd { font-size: 8.8pt !important; line-height: 1.4; }
+  .foot { break-before: avoid; break-inside: avoid; }
+}
+
+/* =========================================================================
+   (2026-11-05) 상단 바 접기 · 오른쪽 목차 레일 · 맨 위로 — 본인 요청 「웹 이력서처럼 페이지를 내리면 우측 이동 메뉴」 「맨 위로 버튼은 우측 하단에 작고 톤앤매너 맞게」
+   레일 · 바 접기는 웹 이력서 본판(2026-10-31)과 같은 규칙(app.js wireChrome 이 .rail 을 만들고 <html> 에 .rail-on · .mast-off · .past-hero 를 단다)
+   ========================================================================= */
+/* 상단 바 접기 — 첫 화면을 지나 아래로 내릴 때만. 접혀도 맨 아래 진행 막대(.mast::after 2px)는 화면 맨 위에 남는다 */
+@media screen {
+  .mast { transition: transform .25s ease; }
+  .mast-off .mast { transform: translateY(calc(-100% + 2px)); }
+}
+@media (prefers-reduced-motion: reduce) { .mast { transition: none; } }
+
+/* 오른쪽 목차 레일 — PC(861px 이상 · 높이 501px 이상)에서 첫 화면을 지나면 나온다.
+   평소엔 점만(지나온 구간은 채운 점 · 지금 구간은 큰 점), 구간이 바뀔 때 1.6초 · 마우스를 올리거나 키보드로 들어오면 이름이 나온다.
+   1280~1440px 노트북은 오른쪽 여백(--gut)이 좁아 이름을 늘 펼치면 카드를 가린다 — 그래서 점만 둔다. 휴대폰 · 태블릿은 레일 대신 접히는 상단 바 */
+.rail { display: none; }
+@media screen and (min-width: 861px) and (min-height: 501px) {
+  .rail {
+    display: flex; flex-direction: column; gap: 2px; position: fixed; right: 10px; top: 50%; z-index: 40; padding: 6px 0;
+    opacity: 0; visibility: hidden; transform: translate(14px, -50%);
+    transition: opacity .25s, transform .25s, visibility 0s .25s;
+  }
+  .rail-on .rail { opacity: 1; visibility: visible; transform: translate(0, -50%); transition: opacity .25s, transform .25s; }
+  /* 세로 줄 · 지나온 만큼 채운 줄(--rp = 지금 구간 순번 ÷ (구간 수 − 1)) — 점 가운데(오른쪽에서 14px)에 맞춘다 */
+  .rail::before, .rail::after { content: ""; position: absolute; right: 13px; top: 20px; width: 2px; border-radius: 2px; }
+  .rail::before { bottom: 20px; background: var(--rule); }
+  .rail::after { height: calc((100% - 40px) * var(--rp, 0)); background: var(--accent); transition: height .3s ease; }
+  .rail a {
+    position: relative; display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-height: 28px; padding: 0 6px 0 8px;
+    text-decoration: none; color: var(--ink-2); font: 600 12.5px/1 var(--f-sans); letter-spacing: -0.01em;
+  }
+  .rail a i {
+    position: relative; z-index: 1; flex: none; width: 10px; height: 10px; margin-right: 3px; border-radius: 50%;
+    border: 2px solid color-mix(in srgb, var(--ink) 28%, var(--paper)); background: var(--paper);
+    transition: transform .2s, background-color .2s, border-color .2s, box-shadow .2s;
+  }
+  .rail a.past i { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 30%, var(--paper)); }
+  .rail a[aria-current="true"] i { border-color: var(--accent); background: var(--accent); transform: scale(1.3); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent); }
+  .rail a:hover i, .rail a:focus-visible i { border-color: var(--accent); }
+  .rail .rl {
+    padding: 5px 10px; border-radius: 99px; background: var(--surface); border: 1px solid var(--rule); box-shadow: var(--shadow); white-space: nowrap;
+    opacity: 0; transform: translateX(6px); transition: opacity .2s, transform .2s; pointer-events: none;
+  }
+  .rail a[aria-current="true"] .rl { color: var(--accent-ink); font-weight: 700; }
+  .rail:hover .rl, .rail:focus-within .rl, .rail.flash a[aria-current="true"] .rl { opacity: 1; transform: none; }
+  .rail:hover a:hover .rl { color: var(--ink); }
+  .rail a:focus-visible { outline: none; }
+  .rail a:focus-visible .rl { outline: 2px solid var(--accent); outline-offset: 1px; }
+}
+/* 아주 넓은 화면(본문 밖 여백이 넉넉) — 이름을 늘 연하게 둔다(지금 구간만 진하게) */
+@media screen and (min-width: 1700px) and (min-height: 501px) {
+  .rail .rl { opacity: 1; transform: none; background: transparent; border-color: transparent; box-shadow: none; color: var(--ink-3); }
+}
+
+/* 맨 위로 — 오른쪽 아래 작은 원(PC 38px · 휴대폰 40px — 엄지로 누르는 최소 크기). 첫 화면을 지나면 나온다.
+   떠 있는 연락 버튼(.dock, 높이 44px)이 보이는 동안엔 그 바로 위로 비켜 앉는다(.dock-on — app.js wireDock).
+   둘레 링은 읽은 만큼 채워진다(상단 바 진행 막대와 같은 값 --p) — 마스크를 못 쓰는 브라우저에서는 링 없이 버튼만 */
+.totop { display: none; }
+@media screen {
+  .totop {
+    display: grid; place-items: center; position: fixed; right: 20px; bottom: 20px; z-index: 69;
+    width: 38px; height: 38px; padding: 0; border-radius: 50%; cursor: pointer;
+    color: var(--ink-2); background: var(--surface); border: 1px solid var(--rule-2);
+    box-shadow: 0 6px 18px rgba(12, 26, 43, .14);
+    opacity: 0; visibility: hidden; transform: translateY(10px);
+    transition: opacity .2s, transform .2s, bottom .25s ease, color .15s, border-color .15s, visibility 0s .2s;
+  }
+  .totop svg { width: 15px; height: 15px; }
+  .past-hero .totop { opacity: 1; visibility: visible; transform: none; transition: opacity .2s, transform .2s, bottom .25s ease, color .15s, border-color .15s; }
+  .dock-on .totop { bottom: 76px; }   /* 20 + 연락 버튼 44 + 12 */
+  .totop:hover { color: var(--accent-ink); border-color: var(--accent); transform: translateY(-2px); }
+  .totop:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
+@supports ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+  @media screen {
+    .totop::before {
+      content: ""; position: absolute; inset: -1px; border-radius: 50%; padding: 2px; pointer-events: none;
+      background: conic-gradient(var(--accent) calc(var(--p, 0) * 360deg), transparent 0);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+      mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    }
+  }
+}
+/* 휴대폰 — 연락 버튼이 화면 폭 전체 아래 줄(12px 띄움)이라 그 위 오른쪽에. 아이폰 홈 막대 · 가로 노치 자리(safe-area)를 비킨다 */
+@media screen and (max-width: 600px) {
+  .totop { right: calc(12px + env(safe-area-inset-right, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); width: 40px; height: 40px; }
+  .dock-on .totop { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }   /* 12 + 44 + 8 */
+}
+/* 상단 바가 접히는 폭(휴대폰 · 태블릿 · 휴대폰 가로) — 아래로 내리며 읽는 동안(.mast-off)엔 숨고, 위로 올릴 때 · 페이지 끝(.at-end)에서 나온다(app.js wireTop) */
+@media screen and (max-width: 860px), screen and (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  .past-hero.mast-off:not(.at-end) .totop:not(:focus-visible) { opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .2s, transform .2s, bottom .25s ease, visibility 0s .2s; }   /* 6px — 사라지는 동안에도 연락 버튼(8px 아래)에 닿지 않게 */
+}
+@media (prefers-reduced-motion: reduce) { .rail, .rail::after, .rail a i, .rail .rl, .totop { transition: none !important; } }
+@media print { .rail, .totop { display: none !important; } }
+
+/* (2026-11-05) PDF 검토(요약 · 영문 각각) 반영
+   · 쪽 경계에서 나뉜 카드 옆 칸이 빈 테두리로 다음 쪽까지 늘어나던 것(서비스 메타 카드 옆) — 격자 칸을 늘이지 않고(align-self: start) 제 내용 높이만
+   · 종이에서 동작하지 않는 화면 안내(.no-print — 「아래 버튼을 누르면 주소가 복사됩니다」 「메일 앱으로 바로 쓰기 →」)는 뺀다
+   · 맨 끝 안내(.printnote)는 전체 PDF 에도 — 종이에 없는 영상 · 데모를 볼 웹 주소(app.js 가 og:url 로 채운다). 「상세 성과 차트」는 요약에서만 빠지므로 그 말은 요약에만 */
+@media print {
+  .svcgrid > .svc, .pillars > .pillar, .projects > .proj { align-self: start; }
+  .no-print { display: none !important; }
+  .printnote { display: block; margin: 0 0 4pt; font-size: 9.5pt; color: #444; }
+  .printnote b { color: #0c1a2b; font-weight: 700; }
+  body:not(.print-short) .printnote .pn-s { display: none; }
+}

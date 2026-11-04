@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230c1a2b'/%3E%3Cpath d='M7 22 L13 15 L18 18 L25 9' fill='none' stroke='%238b9bff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <!-- 색 · 글꼴 토큰은 한국어판과 같은 파일에서 가져온다 (외부 요청 없음) -->
-<link rel="stylesheet" href="assets/style.css?v=202611032234">
+<link rel="stylesheet" href="assets/style.css?v=202611050126">
 <style>
   /* 영문 요약은 한 장짜리라 한국어판 레이아웃을 쓰지 않는다 — 토큰만 빌려 쓰고 배치는 여기서 한다 */
   body { background: var(--paper); color: var(--ink); font-family: var(--f-sans); line-height: 1.6; margin: 0; }
@@ -93,6 +93,14 @@
   .en-cta ol { margin: 6px 0 0; padding-left: 20px; }
   @media (max-width: 640px) { .en-job { grid-template-columns: minmax(0, 1fr); gap: 8px; } .en-sc th:nth-child(4), .en-sc td:nth-child(4) { display: none; } }
   @media print { .en { padding: 0; max-width: none; } h2.en-h { break-after: avoid; } .en-kpis li, .en-do li, .en-plans li { break-inside: avoid; } }
+  /* (2026-11-05) PDF — 「A good fit if you are…」 상자가 제목 · 첫 줄만 쪽 끝에 남고 갈리던 것, 꼬리말 두 줄이 혼자 마지막 장을 차지하던 것 */
+  @media print { .en-two section, .en-weeks li, .en-cta { break-inside: avoid; } .en-foot { margin-top: 14pt; padding-top: 8pt; font-size: 9pt; break-inside: avoid; } }
+  /* 종이에서는 구간 제목 위 여백(화면 42px) · 경력 줄 · 도구 줄 간격을 줄인다 — 꼬리말 한 줄(© …)만 6장째에 남던 것이 5장 안에 들어간다(헤드리스 A4 실측 6 → 5장).
+     넘치게 되면 Contact 묶음(연락처 · 보내 주실 것 · 꼬리말)이 갈리지 않게 붙여 둔다 */
+  @media print {
+    h2.en-h { margin-top: 16pt; margin-bottom: 10px; } .en-job { padding: 10px 0; } .en-tools p { margin-bottom: 6px; } .en-cta { margin-top: 12px; }
+    #contact + .en-tools { break-inside: avoid; } .en-cta, .en-foot { break-before: avoid; }
+  }
   /* 상단 바 — 한국어판과 같은 .mast · .iconbtn 스타일을 쓴다. 섹션 제목은 바 높이만큼 띄워 가리지 않게 */
   .en [id] { scroll-margin-top: 72px; }
   .mast .iconbtn.go { text-decoration: none; gap: 0; }
@@ -281,7 +289,7 @@
   </div>
 
   <p class="en-foot">
-    This one-page summary is written for English-speaking readers. The full page — channel charts, case videos, services and FAQ — is in Korean: <a href="./">open the Korean page</a>.<br>
+    This English summary is written for English-speaking readers. The full page — channel charts, case videos, services and FAQ — is in Korean: <a href="./">sjpark-growth.github.io/adtech.sj.park</a>.<br>
     © Seongjoon Park · 2026
   </p>
 
@@ -299,7 +307,12 @@
       try { next === 'system' ? localStorage.removeItem('psj-theme') : localStorage.setItem('psj-theme', next); } catch (e) {}
       label.textContent = names[next];
     });
-    document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
+    /* (2026-11-05) 저장되는 PDF 파일 이름 — 인쇄하는 동안만 문서 제목을 Seongjoon_Park_Performance_Marketer_EN_YYYYMM 으로(한국어판 printTitle 과 같은 방식), 끝나면 되돌린다 */
+    var baseTitle = document.title;
+    var printTitle = function () { var d = new Date(); document.title = 'Seongjoon_Park_Performance_Marketer_EN_' + d.getFullYear() + ('0' + (d.getMonth() + 1)).slice(-2); };
+    addEventListener('beforeprint', printTitle);
+    addEventListener('afterprint', function () { document.title = baseTitle; });
+    document.getElementById('printBtn').addEventListener('click', function () { printTitle(); window.print(); });
     /* 경력 기간 — 한국어판 paintPeriods() 와 같은 계산(경력 구간 합, 현 직장은 이번 달까지 · 양 끝 달 포함).
        고정 글자로 두면 매달 한국어판과 어긋나서 넣었다. 구간을 바꾸면 data.js 의 jobs 와 같이 고친다 */
     var cs = document.querySelector('[data-career]');

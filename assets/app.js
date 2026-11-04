@@ -204,14 +204,18 @@
         <span class="cta-l"><small>${telHint}</small><b>${P.phone}</b></span>
         <span class="cta-act">${ICON.phone}<em>${TOUCH ? '전화' : '복사'}</em></span>
       </a>`;
-    const noteHTML = `<p class="cta-note">${ICON.pin}<span>${P.location}</span><span aria-hidden="true">·</span><a href="mailto:${P.email}">메일 앱으로 바로 쓰기 →</a></p>`;
+    // .no-print — 종이(PDF)에서는 눌러도 동작하지 않는 화면 안내라 인쇄에서 뺀다(2026-11-05 요약 PDF 검토)
+    const noteHTML = `<p class="cta-note">${ICON.pin}<span>${P.location}</span><span class="no-print" aria-hidden="true">·</span><a class="no-print" href="mailto:${P.email}">메일 앱으로 바로 쓰기 →</a></p>`;
     $('#heroContact').innerHTML = ctaHTML + noteHTML;
     $('#contact2').innerHTML = ctaHTML;   // 문의 섹션은 세 칸(메일 · 전화 · 안내)을 같은 크기로 — 위치 줄은 아래 따로
     const cn = $('#contactNote'); if (cn) cn.outerHTML = noteHTML.replace('class="cta-note"', 'class="cta-note" id="contactNote"');
     const ask = $('#askBox');
     if (ask && P.ask && P.ask.length) ask.innerHTML = `<b>이것만 적어 보내 주시면 첫 답이 빨라집니다</b><ol>${P.ask.map(x => `<li>${x}</li>`).join('')}</ol><span>메일 · 전화 모두 편하신 쪽으로 — 보통 하루 안에 답드립니다.</span>`;
     $('#heroSum').innerHTML = (P.highlights || []).map(h => `<li><b class="hs-k">${h[0]}</b><span>${h[1]}</span></li>`).join('');
-    $('#contact-lede').innerHTML = `${P.role} · ${P.career}. <b>메일이 가장 빠릅니다</b> — 아래 버튼을 누르면 주소가 복사됩니다.`;
+    $('#contact-lede').innerHTML = `${P.role} · ${P.career}. <b>메일이 가장 빠릅니다</b><span class="no-print"> — 아래 버튼을 누르면 주소가 복사됩니다</span>.`;
+    /* PDF 맨 끝 안내 — 종이에 빠진 것(영상 · 데모)을 볼 웹 주소. og:url 에서 가져와 주소가 바뀌어도 한 곳(index.html <head>)만 고치면 된다 */
+    const pu = $('.printnote .pn-url'), og = $('meta[property="og:url"]');
+    if (pu && og) pu.textContent = og.content.replace(/^https?:\/\//, '').replace(/\/$/, '');
     // 요약 띠
     $('#h-lede').innerHTML = P.lede;
     // 한 줄 요약 아래 포인트 — [항목, 전 → 후 · 기준]
@@ -271,8 +275,7 @@
     // 처음 한 번 + 보이는 동안 12초마다 다시 그린다
     const all = $$('.mp', host), cards = all.filter(c => c._draw);
     let rt = 0; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => cards.forEach(c => c._draw(false)), 120); });
-    addEventListener('beforeprint', () => { PRINTING = true; cards.forEach(c => c._draw(false)); });
-    addEventListener('afterprint', () => { PRINTING = false; cards.forEach(c => c._draw(false)); });
+    onPrint(() => cards.forEach(c => c._draw(false)));
     addEventListener('load', () => setTimeout(() => cards.forEach(c => c._draw(false)), 60)); // 창 높이가 확정된 뒤 한 번 더
     /* (2026-09-26) 휴대폰에서는 네 칸을 옆으로 넘겨 본다(style.css) — 몇 번째 칸인지 점으로 알린다 */
     const dots = el('div', { class: 'mb-dots', 'aria-hidden': 'true' });
@@ -334,6 +337,16 @@
   // 좁은 화면에서는 칸 높이가 차트에서 정해지므로 고정 110px
   const FILL = window.matchMedia('(min-width: 1101px)');
   let PRINTING = false;   // 인쇄할 때는 차트를 낮게 다시 그려 1쪽(표지)에 리포트 네 칸까지 들어가게 한다
+  /* (2026-11-05) PDF 는 뽑는 기기의 화면 폭과 상관없이 같은 모양으로 — 인쇄하는 동안에는 차트를 화면 칸 폭이 아니라
+     A4 인쇄 칸 폭(190mm = 718px 에서 헤드리스 실측)으로 그린다. 예전에는 화면 폭으로 그린 그림을 종이 폭에 맞춰 늘이고 줄여서,
+     1920px 모니터에서 뽑으면 차트가 납작하고 글자가 깨알, 휴대폰에서 뽑으면 성과 차트가 반 쪽을 차지하고 축 글자가 두 배였다.
+     인쇄 CSS 로 칸 폭이 바뀌면 다시 잰다(인쇄 미디어 · 폭 718px 에서 .mp-chart · #perfChart · #gantt 의 clientWidth). */
+  const PRINT_W = { board: 303, perf: 641, gantt: 669 }, PRINT_H = { perf: 250 };
+  const boxW = (box, min, def) => PRINTING ? PRINT_W.board : Math.max(min, box.clientWidth || def);
+  const onPrint = fn => {   // 인쇄 창이 열릴 때 · 닫힐 때 다시 그린다(Ctrl+P 도 같다)
+    addEventListener('beforeprint', () => { PRINTING = true; fn(); });
+    addEventListener('afterprint', () => { PRINTING = false; fn(); });
+  };
   const boardH = box => {
     if (PRINTING) return 74;
     if (!FILL.matches || !box) return 110;
@@ -348,7 +361,7 @@
     line(box, b) {
       const key = b.series, vals = S.roas[key], col = b.color || 'var(--accent)';
       const before = S.periods.B.roas[key], mk = S.periods[b.mark || 'H1'], markV = mk.roas[key];
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(box), m = { l: 2, r: 8, t: 10, b: 16 };
+      const W = boxW(box, 240, 360), H = boardH(box), m = { l: 2, r: 8, t: 10, b: 16 };
       const lo = Math.min(...vals, before) * 0.9, hi = Math.max(...vals, markV) * 1.04;
       const step = (W - m.l - m.r) / N, X = i => m.l + (i + .5) * step, Y = v => m.t + (1 - (v - lo) / (hi - lo)) * (H - m.t - m.b);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${b.title} 월별 ROAS` });
@@ -373,7 +386,7 @@
     },
     pair(box, b) {
       const rows = b.rows, col = b.color || 'var(--accent)';
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(box), rowH = (H - 6) / rows.length;
+      const W = boxW(box, 240, 360), H = boardH(box), rowH = (H - 6) / rows.length;
       const lw = 66, vw = 58, bwMax = Math.max(60, W - lw - vw - 6);   // lw — 「월 전환매출」 이름이 막대에 겹치지 않는 폭
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${b.title} 개선 전후` });
       rows.forEach(([name, la, a, lb, v, unit, dec = 0], k) => {
@@ -393,7 +406,7 @@
     },
     bars(box, b) {
       const vals = b.values, col = b.color || 'var(--accent)', hot = b.hot || 4, base = b.base || 100;
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(box), m = { l: 0, r: 0, t: 12, b: 16 };
+      const W = boxW(box, 240, 360), H = boardH(box), m = { l: 0, r: 0, t: 12, b: 16 };
       const n = vals.length, step = W / n, hi = Math.max(...vals) * 1.08, Y = v => m.t + (1 - v / hi) * (H - m.t - m.b);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${b.title} 월별` });
       const ry = Y(base); s('line', { x1: 0, x2: W, y1: ry, y2: ry, style: 'stroke:var(--before);stroke-dasharray:3 3' }, svg);
@@ -408,7 +421,7 @@
       box.replaceChildren(svg); return svg;
     },
     mix(box) {
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(box), m = { l: 0, r: 0, t: 4, b: 16 };
+      const W = boxW(box, 240, 360), H = boardH(box), m = { l: 0, r: 0, t: 4, b: 16 };
       const step = (W - m.l - m.r) / N, bw = Math.max(3, step - 3);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '매체별 광고비 비중 월별' });
       const Y = p => m.t + (1 - p / 100) * (H - m.t - m.b);
@@ -441,7 +454,7 @@
       return svg;
     },
     brand(box) {
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(box), m = { l: 0, r: 0, t: 8, b: 16 };
+      const W = boxW(box, 240, 360), H = boardH(box), m = { l: 0, r: 0, t: 8, b: 16 };
       const step = W / N, Y = v => m.t + (1 - v / 50) * (H - m.t - m.b);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '브랜드 키워드 의존도 월별' });
       s('rect', { x: 0, y: 0, width: step * tenureIdx, height: H - m.b, style: 'fill:var(--band-b)' }, svg);
@@ -460,7 +473,7 @@
       box.replaceChildren(svg); return svg;
     },
     roas(box) {
-      const W = Math.max(240, box.clientWidth || 360), H = boardH(box), m = { l: 2, r: 8, t: 10, b: 16 };
+      const W = boxW(box, 240, 360), H = boardH(box), m = { l: 2, r: 8, t: 10, b: 16 };
       const step = (W - m.l - m.r) / N, X = i => m.l + (i + .5) * step, Y = v => m.t + (1 - (v - 700) / 1000) * (H - m.t - m.b);
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '통합 ROAS 월별' });
       s('rect', { x: 0, y: 0, width: m.l + step * tenureIdx, height: H - m.b, style: 'fill:var(--band-b)' }, svg);
@@ -484,7 +497,7 @@
     },
     multi(box) {
       // 한 줄 = 매체 | 개선 전 | 막대(점선 = 개선 전 크기) | 개선 후 | 개선 폭
-      const rows = R.boardMulti, W = Math.max(260, box.clientWidth || 360), rowH = Math.max(21, Math.min(27, Math.round(boardH(box) / 4.3))), H = rows.length * rowH + 16;
+      const rows = R.boardMulti, W = boxW(box, 260, 360), rowH = Math.max(21, Math.min(27, Math.round(boardH(box) / 4.3))), H = rows.length * rowH + 16;
       // 막대 길이 = 개선 배수(개선 후 ÷ 개선 전). 점선 칸 = 개선 전(1배). 최대 배수에 맞춰 자를 정한다
       const lw = 66, bw0 = 44, aw = 44, dw = 48, bx = lw + bw0, bwMax = Math.max(40, W - bx - aw - dw - 8), maxR = Math.max(...rows.map(r => r[2] / r[1])) * 1.08;
       const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': '매체별 ROAS 개선 전후' });
@@ -693,6 +706,7 @@
     $('#phaseList').innerHTML = R.phases.map(p => `<li><span class="pn">${p.n}</span><div><b>${p.t}</b><span class="pp">${mLabel(p.from)}–${mLabel(p.to)} · ${p.s}</span><p>${p.d}</p></div></li>`).join('');
     setView(curView, true);
     observeWidth($('#perfChart'), () => drawPerf(false));
+    onPrint(() => drawPerf(false));
   }
 
   function setView(id, first) {
@@ -734,9 +748,9 @@
   function drawPerf(animate) {
     const v = VIEWS.find(x => x.id === curView);
     const box = $('#perfChart');
-    const W = Math.max(320, box.clientWidth || 800);
+    const W = PRINTING ? PRINT_W.perf : Math.max(320, box.clientWidth || 800);
     const narrow = W < 560;
-    const H = narrow ? 320 : 400;
+    const H = PRINTING ? PRINT_H.perf : narrow ? 320 : 400;   // 인쇄: 차트 · 기간 비교 표가 한 쪽에 같이 들어가는 높이
     /* 오른쪽 여백 = 끝 라벨 자리. duo 는 끝 라벨이 짧아(값 · 「9월 월 환산」) 168 이면 오른쪽이 비어 보인다 (2026-09-19) */
     const m = { l: 48, r: narrow ? 56 : (v.type === 'stack' ? 110 : v.type === 'duo' ? 96 : v.series.length > 1 ? 168 : 76), t: 62, b: 30 };
     const step = (W - m.l - m.r) / N;
@@ -988,11 +1002,14 @@
   /* ------------------------------------------------------------ pillars */
   function shortTitle(id) { if (SECTION_LINKS[id] && SECTION_LINKS[id][1]) return SECTION_LINKS[id][1]; const p = R.projects.find(x => x.id === id); return p ? p.title.split(' — ')[0] : id; }
   function renderPillars() {
+    /* .phead — 화면에서는 없는 것과 같고(display: contents), 인쇄에서는 꼬리표 · 제목 · 설명을 한 덩어리로 묶어 쪽 끝에 꼬리표만 남지 않게 한다(style.css 「PDF 쪽 맞춤 보강」) */
     $('#pillarGrid').innerHTML = R.pillars.map(p => `
       <article class="pillar">
+        <div class="phead">
         <div class="ptop"><span class="pe" aria-hidden="true">${p.e || ''}</span><span class="pk">${p.k}</span></div>
         <h3>${p.h}</h3>
         <p>${p.p}</p>
+        </div>
         <ul class="proof">${p.proof.map(([v, u, k]) => `<li><span class="pv">${v}<small>${u}</small></span><span class="pl">${k}</span></li>`).join('')}</ul>
         ${p.ev.length ? `<div class="ev">사례 ${p.ev.map(id => `<a href="${linkOf(id)}">${shortTitle(id)}</a>`).join('')}</div>` : '<div class="ev">사례 <a href="#career">경력 — D사 · C사</a></div>'}
       </article>`).join('');
@@ -1021,8 +1038,9 @@
     const host = $('#gantt');
     const draw = () => {
       // 좁은 화면(휴대폰)은 가로 스크롤 없이 한 화면에 — 회사 이름 칸과 오른쪽 여백을 줄이고 연도는 2년 간격
-      const narrow = host.clientWidth < 600;
-      const W = narrow ? Math.max(300, host.clientWidth - 20) : Math.max(640, host.clientWidth - 36), rowH = 30, m = narrow ? { l: 92, r: 66, t: 22, b: 8 } : { l: 150, r: 84, t: 22, b: 8 };
+      const cw = PRINTING ? PRINT_W.gantt : host.clientWidth;   // 인쇄는 종이 칸 폭으로(휴대폰에서 뽑아도 좁은 판으로 그리지 않게)
+      const narrow = cw < 600;
+      const W = narrow ? Math.max(300, cw - 20) : Math.max(640, cw - 36), rowH = 30, m = narrow ? { l: 92, r: 66, t: 22, b: 8 } : { l: 150, r: 84, t: 22, b: 8 };
       const rows = [...all].sort((a, b) => ym(b.from) - ym(a.from));
       const H = m.t + rows.length * rowH + m.b;
       const X = t => m.l + (t - t0) / (t1 - t0) * (W - m.l - m.r);
@@ -1069,7 +1087,7 @@
         g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
       });
     };
-    draw(); observeWidth(host, draw);
+    draw(); observeWidth(host, draw); onPrint(draw);
     function linkCareer(co, on) {
       $$('#gantt .grow-row').forEach(g => { g.classList.toggle('dim', on && g.dataset.co !== co); g.classList.toggle('on', on && g.dataset.co === co); });
       $$('#jobs .job').forEach(j => { j.classList.toggle('linked', on && j.dataset.co === co); j.classList.toggle('dimmed', on && j.dataset.co !== co); });
@@ -1153,10 +1171,11 @@
     const S = R.services; if (!S) return;
     $('#svc-h').textContent = S.headline;
     $('#svc-lede').innerHTML = S.lede;
+    // .svc-head — 화면에서는 없는 것과 같고, 인쇄에서는 카드 이름 · 대상 줄이 쪽 끝에 홀로 남지 않게 묶는다(.phead 와 같은 이유)
     const card = it => `
       <article class="svc t-${it.tier || 'perf'}">
-        <header><span class="emo" aria-hidden="true">${it.e}</span><h3>${it.k}</h3></header>
-        <p class="svc-who">${it.who}</p>
+        <div class="svc-head"><header><span class="emo" aria-hidden="true">${it.e}</span><h3>${it.k}</h3></header>
+        <p class="svc-who">${it.who}</p></div>
         <ul>${it.what.map(w => `<li>${w}</li>`).join('')}</ul>
         <div class="svc-proof">${it.proof.map(([v, k]) => `<div><b>${v}</b><span>${k}</span></div>`).join('')}</div>
         ${it.see ? `<a class="svc-see" href="${linkOf(it.see)}">관련 사례 · ${shortTitle(it.see)} →</a>` : ''}
@@ -1286,8 +1305,17 @@
       imgs.forEach(i => { i.loading = 'eager'; });
       return Promise.all(imgs.filter(i => !i.complete).map(i => new Promise(r => { i.addEventListener('load', r, { once: true }); i.addEventListener('error', r, { once: true }); })));
     };
+    /* (2026-11-05) 저장되는 PDF 파일 이름 — 크롬은 문서 제목을 기본 파일 이름으로 쓴다. 「전체 PDF」 · 「요약 PDF」가 같은 이름(「박성준 · 프리랜서 퍼포먼스 마케터」)으로
+       저장돼 받는 쪽에서 구분이 안 되던 것 → 인쇄하는 동안만 「박성준_프리랜서_퍼포먼스마케터_전체(요약)_YYYYMM」으로 바꾸고 끝나면 되돌린다(Ctrl+P 도 beforeprint 로 같다 · 웹 이력서 본판과 같은 방식) */
+    const baseTitle = document.title;
+    const printTitle = () => {
+      const d = new Date(), ym = d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0');
+      document.title = `박성준_프리랜서_퍼포먼스마케터_${document.body.classList.contains('print-short') ? '요약' : '전체'}_${ym}`;
+    };
+    addEventListener('beforeprint', printTitle);
+    addEventListener('afterprint', () => { document.title = baseTitle; });
     const printAll = done => {
-      const go = () => { window.print(); if (done) setTimeout(done, 1500); };   // done: afterprint 가 오지 않는 브라우저 대비
+      const go = () => { printTitle(); window.print(); if (done) setTimeout(done, 1500); };   // done: afterprint 가 오지 않는 브라우저 대비
       const pend = loadLazy();
       if (!$$('img').some(i => !i.complete)) return go();
       document.documentElement.classList.add('is-preparing');
@@ -1337,11 +1365,29 @@
       document.documentElement.style.setProperty('--mast-h', mast.offsetHeight + 'px');
     };
     setMastH(); addEventListener('resize', setMastH);
-    links.forEach(a => a.addEventListener('click', e => {
+    /* (2026-11-05) 상단 바 접기 · 오른쪽 목차 레일 — 웹 이력서 본판(10-31)과 같은 동작, 본인 요청 「웹 이력서처럼 페이지를 내리면 우측 이동 메뉴」
+       · 아래로 내리면 상단 바를 위로 접고, 위로 조금 올리면 다시 내린다. 접혀도 아래 진행 막대(2px)는 남는다
+       · PC(861px 이상 · 높이 501px 이상)는 첫 화면을 지나면 오른쪽 끝에 세로 목차(구간 점 · 지금 구간 이름)가 나온다(style.css .rail)
+       · 휴대폰 · 태블릿은 오른쪽에 둘 자리가 없어 레일 대신 접히는 상단 바(위로 살짝 올리면 메뉴가 다시 나온다)
+       · 첫 화면 근처 · 상단 바에 키보드 초점이 있을 때는 접지 않는다 */
+    const hideMQ = matchMedia('(max-width: 860px), (max-height: 500px) and (orientation: landscape) and (pointer: coarse)');
+    const railMQ = matchMedia('(min-width: 861px) and (min-height: 501px)');
+    const th = () => innerHeight * (railMQ.matches ? 0.8 : 0.6);   // 이보다 위(첫 화면)에서는 접지 않고 레일도 숨긴다
+    const rail = el('nav', { class: 'rail', 'aria-label': '구간 목차' },
+      links.map(a => `<a href="${a.getAttribute('href')}"><span class="rl">${a.textContent.trim()}</span><i aria-hidden="true"></i></a>`).join(''));
+    document.body.appendChild(rail);
+    const rlinks = $$('a', rail);
+    // 구간으로 갈 때 — 아래로 가면 상단 바가 접히므로 그 높이를 빼지 않는다(빼면 구간 위에 빈 띠가 남는다). 위로 가면 바가 다시 내려오므로 뺀다
+    const goY = t => {
+      const raw = t.getBoundingClientRect().top + scrollY - 8;
+      const hides = (hideMQ.matches || railMQ.matches) && raw > scrollY && raw >= th();
+      return Math.max(0, hides ? raw : raw - mast.offsetHeight);
+    };
+    links.concat(rlinks).forEach(a => a.addEventListener('click', e => {
       const t = $(a.getAttribute('href')); if (!t) return;
       e.preventDefault();
-      const y = a.getAttribute('href') === '#top' ? 0 : t.getBoundingClientRect().top + scrollY - mast.offsetHeight - 8;
-      scrollTo({ top: Math.max(0, y), behavior: reduceMotion ? 'auto' : 'smooth' });
+      const y = a.getAttribute('href') === '#top' ? 0 : goY(t);
+      scrollTo({ top: y, behavior: reduceMotion ? 'auto' : 'smooth' });
       try { history.replaceState(null, '', a.getAttribute('href')); } catch (err) {}
     }));
     // 왼쪽 위 이름(박성준 Growth Report 2026)을 누르면 맨 위로
@@ -1349,21 +1395,39 @@
       e.preventDefault(); scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
       try { history.replaceState(null, '', '#top'); } catch (err) {}
     });
-    let lastC = -2;
+    let lastC = -2, flashT = 0;
     const spy = () => {
       const max = document.documentElement.scrollHeight - innerHeight;
       mast.style.setProperty('--p', max > 0 ? (scrollY / max).toFixed(4) : 0);
       const y = scrollY + 120; let c = -1;
       secs.forEach((sec, i) => { if (sec && sec.offsetTop <= y) c = i; });
       links.forEach((a, i) => a.setAttribute('aria-current', String(i === c)));
+      rlinks.forEach((a, i) => { a.setAttribute('aria-current', String(i === c)); a.classList.toggle('past', i < c); });
+      rail.style.setProperty('--rp', c > 0 ? (c / (rlinks.length - 1)).toFixed(3) : 0);
       // 휴대폰 메뉴는 옆으로 넘치므로, 지금 구간의 탭이 메뉴 가운데에 보이게 밀어 준다(2026-10-26 · 웹 이력서 본판과 같음 · PC 는 넘치지 않아 그대로)
       if (c !== lastC) {
         lastC = c;
+        // 레일 — 구간이 바뀌면 그 이름을 1.6초 보여 준다(평소엔 점만, 마우스를 올리면 전체 이름)
+        rail.classList.add('flash'); clearTimeout(flashT); flashT = setTimeout(() => rail.classList.remove('flash'), 1600);
         const a = links[c], nav = a && a.parentElement;
         if (a && innerWidth <= 620 && nav.scrollWidth > nav.clientWidth + 1) nav.scrollTo({ left: nav.scrollLeft + a.getBoundingClientRect().left - nav.getBoundingClientRect().left - (nav.clientWidth - a.offsetWidth) / 2, behavior: reduceMotion ? 'auto' : 'smooth' });
       }
     };
     addEventListener('scroll', spy, { passive: true }); spy();
+    // 상단 바 접기 · 레일 보이기. 마우스로 메뉴를 누른 뒤 남는 초점으로는 접기를 막지 않는다(키보드 초점만)
+    const kb = n => { try { return n.matches(':focus-visible'); } catch (err) { return true; } };
+    let lastY = scrollY, acc = 0;
+    const hideBar = () => {
+      const yy = scrollY, dy = yy - lastY; lastY = yy;
+      const past = yy >= th(), f = document.activeElement;
+      root.classList.toggle('rail-on', railMQ.matches && past);
+      root.classList.toggle('past-hero', past);   // 「맨 위로」 버튼(wireTop)도 이 기준으로 나온다
+      if (!(hideMQ.matches || railMQ.matches) || !past || (mast.contains(f) && kb(f))) { root.classList.remove('mast-off'); acc = 0; return; }
+      acc = (dy > 0) === (acc > 0) ? acc + dy : dy;   // 방향이 바뀌면 처음부터 센다 — 손가락 떨림(몇 px)으로 깜빡이지 않게
+      if (acc > 24) root.classList.add('mast-off'); else if (acc < -24) root.classList.remove('mast-off');
+    };
+    addEventListener('scroll', hideBar, { passive: true }); addEventListener('resize', hideBar); hideBar();
+    mast.addEventListener('focusin', e => { if (kb(e.target)) root.classList.remove('mast-off'); });
     // 휴대폰 메뉴 줄 양 끝 흐림 — 왼쪽으로 넘겼으면 왼쪽 끝도, 끝까지 넘겼으면 오른쪽은 흐리지 않는다(style.css .nav-l · .nav-end, 2026-10-26)
     const nav = $('.mast nav');
     const edge = () => { const max = nav.scrollWidth - nav.clientWidth; nav.classList.toggle('nav-l', nav.scrollLeft > 4); nav.classList.toggle('nav-end', nav.scrollLeft >= max - 4); };
@@ -1400,11 +1464,33 @@
     document.body.appendChild(dock);
     const hero = $('.hero'), contact = $('#contact');
     let pastHero = false, atContact = false;
-    const upd = () => dock.classList.toggle('on', pastHero && !atContact);
+    // dock-on — 「맨 위로」 버튼이 연락 버튼 바로 위로 비켜 앉는다(style.css .totop)
+    const upd = () => { const on = pastHero && !atContact; dock.classList.toggle('on', on); document.documentElement.classList.toggle('dock-on', on); };
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(([en]) => { pastHero = !en.isIntersecting; upd(); }, { threshold: 0 }).observe(hero);
       new IntersectionObserver(([en]) => { atContact = en.isIntersecting; upd(); }, { threshold: 0.15 }).observe(contact);
     }
+  }
+
+  /* ------------------------------------------------------------ 맨 위로 (2026-11-05, 본인 요청 「우측 하단에 작고 톤앤매너 맞게 · 모바일 최적화도」)
+     첫 화면을 지나면(wireChrome 의 past-hero) 오른쪽 아래에 작은 원 버튼. 연락 버튼이 떠 있으면 그 위로 비켜 앉는다.
+     휴대폰(상단 바가 접히는 폭)은 읽는 동안 본문을 가리지 않게 — 아래로 내리는 중엔 숨고, 위로 올려 상단 바가 다시 내려올 때 · 페이지 끝(at-end)에서 나온다(웹 이력서 본판과 같은 동작).
+     둘레 링 = 읽은 만큼(상단 바 진행 막대와 같은 --p). 인쇄에서는 숨긴다 */
+  function wireTop() {
+    const b = el('button', { class: 'totop', type: 'button', 'aria-label': '맨 위로', title: '맨 위로' },
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 2.5h9"/><path d="M8 13.5V6"/><path d="M4.5 9.5 8 6l3.5 3.5"/></svg>');
+    document.body.appendChild(b);
+    b.addEventListener('click', e => {
+      scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      try { history.replaceState(null, '', '#top'); } catch (err) {}
+      if (!e.detail) { const first = $('.mast .id'); if (first) first.focus({ preventScroll: true }); }   // 키보드로 눌렀으면 초점도 맨 위(이름)로
+    });
+    const mast = $('.mast'), root = document.documentElement;
+    const ring = () => {
+      b.style.setProperty('--p', mast.style.getPropertyValue('--p') || 0);
+      root.classList.toggle('at-end', scrollY + innerHeight >= root.scrollHeight - 120);
+    };
+    addEventListener('scroll', ring, { passive: true }); addEventListener('resize', ring); ring();
   }
 
   /* ------------------------------------------------------------ boot */
@@ -1426,6 +1512,7 @@
   renderScores();
   wireChrome();
   wireDock();
+  wireTop();
   wireAnimBudget();
   wireMeta();
   onFirstView($('#kpis'), () => setTimeout(() => rollNumbers($('#kpis')), reduceMotion ? 0 : 200), 0.2);
